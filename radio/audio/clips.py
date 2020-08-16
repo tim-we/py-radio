@@ -2,6 +2,7 @@ from abc import ABC, abstractmethod
 import audio2numpy
 import sounddevice as sd
 import time
+import os.path
 
 
 class Clip(ABC):
@@ -30,7 +31,7 @@ class MP3Clip(Clip):
         super.stop()
 
     def __str__(self):
-        return self.file
+        return os.path.basename(self.file)
 
 
 class Pause(Clip):
