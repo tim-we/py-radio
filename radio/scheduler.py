@@ -1,17 +1,21 @@
 from queue import Queue
 import time
 import random
+from threading import Thread
 from radio.audio.clips import Clip, MP3Clip
 from radio.library import ClipLibrary
+from radio.services.tagesschau import Tagesschau100s
 
 
 class Scheduler:
     def __init__(self, library: ClipLibrary):
         self.library = library
-        self._queue: Queue = Queue()
-        self._force_song: bool = False
+        self._queue = Queue()
+        self._force_song = False
         self._other_clips: int = 0
         self._last_host_time: float = 0.0
+        self.tagesschau = Tagesschau100s()
+        Thread(target=self._news_thread, daemon=True).start()
 
     def next(self) -> Clip:
         if not self._queue.empty():
@@ -49,3 +53,17 @@ class Scheduler:
         t: float = time.time() - self._last_host_time
         r: float = 4.0 + random.uniform(0.0, 6.0)
         return t > r
+
+    def _news_thread(self):
+        while(True):
+            # compute remaining time
+            t = time.localtime()
+            rm = max(0, 60 - t.tm_min)
+
+            # await next full hour
+            time.sleep(60*rm)
+
+            # update & schedule news
+            self.tagesschau.update()
+            if not self.tagesschau.latest == "":
+                self._queue.put(MP3Clip(self.latest))
