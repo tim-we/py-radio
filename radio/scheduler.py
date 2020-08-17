@@ -55,6 +55,7 @@ class Scheduler:
         return t > r
 
     def _news_thread(self):
+        tagesschau = self.tagesschau
         while(True):
             # compute remaining time
             t = time.localtime()
@@ -64,6 +65,10 @@ class Scheduler:
             time.sleep(60*rm)
 
             # update & schedule news
-            self.tagesschau.update()
+            tagesschau.update()
             if not self.tagesschau.latest == "":
-                self._queue.put(MP3Clip(self.latest))
+                self._queue.put(MP3Clip(tagesschau.latest))
+                print("news enqueued")
+
+            # sleep 5 min to avoid immediate rescheduling
+            time.sleep(5*60)

@@ -4,10 +4,11 @@ import tempfile
 import os
 import time
 
+PODCAST_URL = "http://www.tagesschau.de" \
+              "/export/podcast/hi/tagesschau-in-100-sekunden/"
+
 
 class Tagesschau100s:
-    PODCAST_URL: str = "http://www.tagesschau.de/export/podcast/hi/tagesschau-in-100-sekunden/"
-
     def __init__(self):
         self.latest: str = ""
         self.time: float = 0.0
@@ -17,7 +18,7 @@ class Tagesschau100s:
     def update(self):
         try:
             # get MP3 URL of latest episode
-            res1 = requests.get(Tagesschau100s.PODCAST_URL)
+            res1 = requests.get(PODCAST_URL)
             tree = ET.fromstring(res1.content)
             url = tree.find(".//item/enclosure[@type='audio/mp3']").get("url")
 
