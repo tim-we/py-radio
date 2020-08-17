@@ -6,13 +6,12 @@ from radio.library import ClipLibrary
 
 
 class Scheduler:
-    _queue: Queue = Queue()
-    _force_song: bool = False
-    _other_clips: int = 0
-    _last_host_time: float = 0.0
-
     def __init__(self, library: ClipLibrary):
         self.library = library
+        self._queue: Queue = Queue()
+        self._force_song: bool = False
+        self._other_clips: int = 0
+        self._last_host_time: float = 0.0
 
     def next(self) -> Clip:
         if not self._queue.empty():

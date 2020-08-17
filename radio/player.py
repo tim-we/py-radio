@@ -7,12 +7,11 @@ from radio.library import ClipLibrary
 
 
 class Player:
-    _queue: LifoQueue = LifoQueue()
-    _current: Clip = None
-    _thread: Thread = None
-
     def __init__(self, library: ClipLibrary):
+        self._queue = LifoQueue()
         self._scheduler = Scheduler(library)
+        self._current: Clip = None
+        self._thread: Thread = None
 
     def schedule(self, file: str):
         clip = MP3Clip(file)
@@ -20,6 +19,7 @@ class Player:
         self._queue.put(clip)
 
     def skip(self):
+        # TODO: fix
         if self._current is not None:
             self._current.stop()
 

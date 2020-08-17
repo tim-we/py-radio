@@ -1,13 +1,14 @@
 from abc import ABC, abstractmethod
 import audio2numpy
-import sounddevice as sd
+import sounddevice
 import time
 import os.path
 
 
 class Clip(ABC):
-    _aborted: bool = False
-    user_req: bool = False
+    def __init__(self):
+        self._aborted: bool = False
+        self.user_req: bool = False
 
     @abstractmethod
     def start(self):
@@ -18,17 +19,20 @@ class Clip(ABC):
 
 
 class MP3Clip(Clip):
+    _dev = sounddevice
+
     def __init__(self, file: str):
+        super().__init__()
         self.file = file
 
     def start(self):
         data, sr = audio2numpy.open_audio(self.file)
-        sd.play(data, sr)
-        sd.wait()
+        MP3Clip._dev.play(data, sr)
+        MP3Clip._dev.wait()
 
     def stop(self):
-        sd.stop()
-        super.stop()
+        MP3Clip._dev.stop()
+        super().stop()
 
     def __str__(self):
         return os.path.basename(self.file)
@@ -36,6 +40,7 @@ class MP3Clip(Clip):
 
 class Pause(Clip):
     def __init__(self, duration: float = 600):
+        super().__init__()
         self.duration = duration
 
     def start(self):
