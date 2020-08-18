@@ -3,6 +3,7 @@ import audio2numpy
 import sounddevice
 import time
 import os.path
+from threading import Event
 
 
 class Clip(ABC):
@@ -41,11 +42,13 @@ class MP3Clip(Clip):
 
 class Pause(Clip):
     def __init__(self, duration: float = 600):
-        super().__init__("" + duration + "s pause")
+        super().__init__("{}s pause".format(duration))
         self.duration = duration
+        self._abort = Event()
 
     def start(self):
-        time.sleep(self.duration)
+        self._abort.wait(self.duration)
 
     def stop(self):
-        pass  # TODO
+        if not self._abort.is_set():
+            self._abort.set()

@@ -13,15 +13,16 @@ class Player:
         self._current: Clip = None
         self._thread: Thread = None
 
-    def schedule(self, file: str):
-        clip = MP3Clip(file)
+    def schedule(self, clip: Clip):
         clip.user_req = True
         self._queue.put(clip)
 
     def skip(self):
-        # TODO: fix
         if self._current is not None:
             self._current.stop()
+            print("Skipped", self._current)
+        else:
+            print("Skip failed: Nothing to skip.")
 
     def start(self):
         if self._thread is None:
