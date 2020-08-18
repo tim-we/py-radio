@@ -30,3 +30,5 @@ urllib3==1.25.10
 waitress==1.4.4
 Werkzeug==1.0.1
 wrapt==1.12.1
+python-telegram-bot==12.8
+python-decouple==3.3

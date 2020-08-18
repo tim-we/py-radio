@@ -22,7 +22,7 @@ class Clip(ABC):
 
     def stop(self) -> None:
         if not self._completed.is_set():
-            self._completeded = True
+            self._aborted = True
             self._completed.set()
 
     def __str__(self) -> str:

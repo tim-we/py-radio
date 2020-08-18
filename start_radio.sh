@@ -1,7 +1,18 @@
 #!/usr/bin/env bash
-path=$(dirname $(realpath $0))
-cd $path
-# assuming the existance of virtual environment .venv
+path=$(dirname "$(realpath "$0")")
+exitcode=0
+cd "$path" || exit
+# assuming the existence of virtual environment .venv
 source .venv/bin/activate
-python3 app.py
 
+while [ "$exitcode" == 0 ]
+do
+  python3 app.py
+  exitcode="$?"
+  if [ "$exitcode" == 69 ]
+  then
+    git pull
+    exitcode=0
+  fi
+  sleep 1
+done
