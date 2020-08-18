@@ -10,7 +10,7 @@ from radio.services.tagesschau import Tagesschau100s
 class Scheduler:
     def __init__(self, library: ClipLibrary):
         self.library = library
-        self._queue = Queue()
+        self._queue: Queue = Queue()
         self._force_song = False
         self._other_clips: int = 0
         self._last_host_time: float = 0.0
@@ -34,10 +34,10 @@ class Scheduler:
                 return MP3Clip(self.library.hosts.next())
 
             if self._other_clips > 2 or random.uniform(0, 1) < 0.7:
-                return self.library.music.next()
+                return MP3Clip(self.library.music.next())
             else:
                 self._other_clips += 1
-                return self.library.other.next()
+                return MP3Clip(self.library.other.next())
 
     def reset(self, hard: bool = False):
         self._force_song = False

@@ -1,17 +1,18 @@
 from threading import Thread
 import time
-from queue import LifoQueue
-from radio.audio.clips import Clip, MP3Clip
+from queue import Queue, LifoQueue
+from radio.audio.clips import Clip
 from radio.scheduler import Scheduler
 from radio.library import ClipLibrary
+from typing import Optional
 
 
 class Player:
     def __init__(self, library: ClipLibrary):
-        self._queue = LifoQueue()
+        self._queue: Queue = LifoQueue()
         self._scheduler = Scheduler(library)
-        self._current: Clip = None
-        self._thread: Thread = None
+        self._current: Optional[Clip] = None
+        self._thread: Optional[Thread] = None
 
     def schedule(self, clip: Clip):
         clip.user_req = True

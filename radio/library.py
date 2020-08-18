@@ -1,6 +1,7 @@
 import glob
 import os
 import random
+from typing import List
 
 
 class ClipLibrary:
@@ -16,9 +17,9 @@ class ClipLibrary:
 
 class ClipPool:
     def __init__(self, folder: str):
-        self.clips = []
-        self._history = []
-        self._history_len = 0
+        self.clips: List[str] = []
+        self._history: List[int] = []
+        self._history_len: int = 0
         self._folder = folder
         self._scan()
 
