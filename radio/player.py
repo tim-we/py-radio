@@ -14,6 +14,12 @@ class Player:
         self._current: Optional[Clip] = None
         self._thread: Optional[Thread] = None
 
+    def now(self) -> str:
+        if self._current is not None:
+            return self._current.name
+        else:
+            return "silence"
+
     def schedule(self, clip: Clip) -> None:
         clip.user_req = True
         self._queue.put(clip)

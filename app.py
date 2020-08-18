@@ -1,5 +1,6 @@
 from radio.player import Player
 from radio.library import ClipLibrary
+from bots.tg import Telegram
 import json
 import os
 
@@ -22,3 +23,5 @@ print("Radio starting...")
 library = ClipLibrary(lib_path)
 player = Player(library)
 player.start()
+telegram = Telegram(player)
+telegram.start()
