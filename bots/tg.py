@@ -10,8 +10,8 @@ from typing import Any
 class Telegram:
     def __init__(self, player: Player):
         self._player = player
-        self.updater = Updater(token=config('TG_TOKEN'), use_context=True)
-        dispatcher = self.updater.dispatcher
+        self._updater = Updater(token=config('TG_TOKEN'), use_context=True)
+        dispatcher = self._updater.dispatcher
         logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
                             level=logging.INFO)
         exit_handler = CommandHandler('exit', self._exit)
@@ -22,10 +22,10 @@ class Telegram:
         dispatcher.add_handler(unknown_handler)
 
     def start(self) -> None:
-        self.updater.start_polling()
+        self._updater.start_polling()
 
     def stop(self) -> None:
-        self.updater.stop()
+        self._updater.stop()
 
     @staticmethod
     def _exit(update: Any, context: Any) -> None:
