@@ -34,7 +34,7 @@ class ClipPool:
         self.clips: List[str] = []
         self._history: List[int] = []
         self._history_len: int = 0
-        self._folder = folder
+        self.folder = folder
         self.scan()
 
     def next(self) -> str:
@@ -57,7 +57,7 @@ class ClipPool:
         return len(self.clips)
 
     def scan(self) -> None:
-        self.clips = glob.glob(os.path.join(self._folder, "*.mp3"))
+        self.clips = glob.glob(os.path.join(self.folder, "*.mp3"))
         size = len(self.clips)
         self._history_len = min(size - 1, min(max(size//10, 10), 42))
         self._history = []
