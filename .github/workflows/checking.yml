@@ -23,8 +23,13 @@ jobs:
     - name: Setup Python
       uses: actions/setup-python@v2
       
-    - name: python-flake8
-      uses: julianwachholz/flake8-action@v1.0.0
+    - name: Lintly-Flake8
+      uses: grantmcconnaughey/lintly-flake8-github-action@v1.0
+      with:
+        # The GitHub API token to use for creating PR reviews
+        token: $GITHUB_TOKEN
+        # Args to pass to the flake8 executable
+        args: "--max-line-length=120 ."
       
     - name: Mypy Check
       uses: jpetrucciani/mypy-check@0.761
