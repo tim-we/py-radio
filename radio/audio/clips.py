@@ -2,7 +2,7 @@ from abc import ABC, abstractmethod
 import audio2numpy
 import sounddevice
 import os.path
-from threading import Event
+from threading import Thread, Event
 import time
 
 
@@ -32,11 +32,15 @@ class MP3Clip(Clip):
     def __init__(self, file: str):
         super().__init__(os.path.basename(file))
         self.file = file
+        self._loaded = Event()
+        self._data = None
+        Thread(target=self._load, daemon=True).start()
 
     def start(self):
-        data, sr = audio2numpy.open_audio(self.file)
-        duration = len(data) / sr
-        MP3Clip._dev.play(data, sr)
+        while not self._loaded.is_set():
+            self._loaded.wait(0.25)
+        duration = len(self._data) / self._sr
+        MP3Clip._dev.play(self._data, self._sr)
         self._abort.wait(duration)
 
     def stop(self):
@@ -44,12 +48,17 @@ class MP3Clip(Clip):
         super().stop()
         time.sleep(0.1)
 
+    def _load(self):
+        data, sr = audio2numpy.open_audio(self.file)
+        self._data = data
+        self._sr = sr
+        self._loaded.set()
+
 
 class Pause(Clip):
     def __init__(self, duration: float = 600):
         super().__init__("{}s pause".format(duration))
         self.duration = duration
-        self._abort = Event()
 
     def start(self):
         self._abort.wait(self.duration)

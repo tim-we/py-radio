@@ -8,7 +8,7 @@ from radio.services.tagesschau import Tagesschau100s
 
 
 class Scheduler:
-    def __init__(self, library: ClipLibrary):
+    def __init__(self, library: ClipLibrary, preload: bool = True):
         self.library = library
         self._queue: Queue = Queue()
         self._force_song = False
@@ -16,6 +16,8 @@ class Scheduler:
         self._last_host_time: float = 0.0
         self.tagesschau = Tagesschau100s()
         Thread(target=self._news_thread, daemon=True).start()
+        if preload:
+            Thread(target=self._prepare_next, daemon=True).start()
 
     def next(self) -> Clip:
         if not self._queue.empty():
@@ -68,7 +70,13 @@ class Scheduler:
             tagesschau.update()
             if not self.tagesschau.latest == "":
                 self._queue.put(MP3Clip(tagesschau.latest))
-                print("news enqueued")
 
             # sleep 5 min to avoid immediate rescheduling
             time.sleep(5*60)
+
+    def _prepare_next(self):
+        while True:
+            time.sleep(0.5)
+            if self._queue.empty():
+                clip = self.next()
+                self._queue.put(clip)
