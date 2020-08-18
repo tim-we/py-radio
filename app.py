@@ -2,6 +2,7 @@ from radio.player import Player
 from radio.library import ClipLibrary
 import json
 import os
+import web.server
 
 # defaults
 lib_path = "test_library"
@@ -22,3 +23,4 @@ print("Radio starting...")
 library = ClipLibrary(lib_path)
 player = Player(library)
 player.start()
+web.server.create(player, library)
