@@ -20,8 +20,9 @@ class Player:
 
     def skip(self) -> None:
         if self._current is not None:
+            msg = "Skipped {}".format(self._current)
             self._current.stop()
-            print("Skipped", self._current)
+            print(msg)
         else:
             print("Skip failed: Nothing to skip.")
 
