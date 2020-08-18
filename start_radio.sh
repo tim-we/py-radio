@@ -9,5 +9,10 @@ while [ "$exitcode" == 0 ]
 do
   python3 app.py
   exitcode="$?"
+  if [ "$exitcode" == 69 ]
+  then
+    git pull
+    exitcode=0
+  fi
   sleep 1
 done
