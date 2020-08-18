@@ -1,6 +1,8 @@
 import glob
 import os
 import random
+import time
+from threading import Thread
 from typing import List
 
 
@@ -13,6 +15,18 @@ class ClipLibrary:
         self.other = ClipPool(folder)
         print(" ->", self.music.size(), "songs")
         print(" ->", self.hosts.size(), "host clips")
+        Thread(target=self._update_thread, daemon=True)
+
+    def _update_thread(self):
+        while(True):
+            # wait 30min
+            time.sleep(30 * 60)
+            # update library
+            print("Updating library...")
+            self.hosts.scan()
+            self.music.scan()
+            self.night.scan()
+            self.other.scan()
 
 
 class ClipPool:
@@ -21,7 +35,7 @@ class ClipPool:
         self._history: List[int] = []
         self._history_len: int = 0
         self._folder = folder
-        self._scan()
+        self.scan()
 
     def next(self) -> str:
         # find a clip that is not in the recent history
@@ -42,7 +56,8 @@ class ClipPool:
     def size(self) -> int:
         return len(self.clips)
 
-    def _scan(self):
+    def scan(self):
         self.clips = glob.glob(os.path.join(self._folder, "*.mp3"))
         size = len(self.clips)
         self._history_len = min(size - 1, min(max(size//10, 10), 42))
+        self._history = []
