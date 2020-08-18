@@ -17,7 +17,7 @@ class ClipLibrary:
         print(" ->", self.hosts.size(), "host clips")
         Thread(target=self._update_thread, daemon=True)
 
-    def _update_thread(self):
+    def _update_thread(self) -> None:
         while(True):
             # wait 30min
             time.sleep(30 * 60)
@@ -56,7 +56,7 @@ class ClipPool:
     def size(self) -> int:
         return len(self.clips)
 
-    def scan(self):
+    def scan(self) -> None:
         self.clips = glob.glob(os.path.join(self._folder, "*.mp3"))
         size = len(self.clips)
         self._history_len = min(size - 1, min(max(size//10, 10), 42))

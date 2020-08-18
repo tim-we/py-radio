@@ -14,22 +14,23 @@ class Player:
         self._current: Optional[Clip] = None
         self._thread: Optional[Thread] = None
 
-    def schedule(self, clip: Clip):
+    def schedule(self, clip: Clip) -> None:
         clip.user_req = True
         self._queue.put(clip)
 
-    def skip(self):
+    def skip(self) -> None:
         if self._current is not None:
             self._current.stop()
             print("Skipped", self._current)
         else:
             print("Skip failed: Nothing to skip.")
 
-    def start(self):
+    def start(self) -> None:
         if self._thread is None:
-            self._thread = Thread(target=self._play, daemon=False).start()
+            self._thread = Thread(target=self._play, daemon=False)
+            self._thread.start()
 
-    def _play(self):
+    def _play(self) -> None:
         while True:
             if self._queue.empty():
                 next_clip = self._scheduler.next()

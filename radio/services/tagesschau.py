@@ -9,21 +9,22 @@ PODCAST_URL = "http://www.tagesschau.de" \
 
 
 class Tagesschau100s:
-    def __init__(self):
+    def __init__(self) -> None:
         self.latest: str = ""
         self.time: float = 0.0
         self.update()
         print("Tagesschau in 100s now available.")
 
-    def update(self):
+    def update(self) -> None:
         try:
             # get MP3 URL of latest episode
             res1 = requests.get(PODCAST_URL)
             tree = ET.fromstring(res1.content)
-            url = tree.find(".//item/enclosure[@type='audio/mp3']").get("url")
+            elem = tree.find(".//item/enclosure[@type='audio/mp3']")
+            url = elem.get("url")  # type: ignore
 
             # download MP3 file
-            res2 = requests.get(url)
+            res2 = requests.get(url)  # type: ignore
             tmp_folder = os.path.join(tempfile.gettempdir(), "radio")
             if not os.path.exists(tmp_folder):
                 os.makedirs(tmp_folder)

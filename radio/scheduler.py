@@ -41,7 +41,7 @@ class Scheduler:
                 self._other_clips += 1
                 return MP3Clip(self.library.other.next())
 
-    def reset(self, hard: bool = False):
+    def reset(self, hard: bool = False) -> None:
         self._force_song = False
         self._other_clips = 0
         self._last_host_time = 0.0
@@ -56,7 +56,7 @@ class Scheduler:
         r: float = 4.0 + random.uniform(0.0, 6.0)
         return t > r
 
-    def _news_thread(self):
+    def _news_thread(self) -> None:
         tagesschau = self.tagesschau
         while(True):
             # compute remaining time
@@ -74,7 +74,7 @@ class Scheduler:
             # sleep 5 min to avoid immediate rescheduling
             time.sleep(5*60)
 
-    def _prepare_next(self):
+    def _prepare_next(self) -> None:
         while True:
             time.sleep(0.5)
             if self._queue.empty():

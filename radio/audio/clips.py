@@ -4,6 +4,8 @@ import sounddevice
 import os.path
 from threading import Thread, Event
 import time
+import numpy as np
+from typing import Optional
 
 
 class Clip(ABC):
@@ -14,15 +16,15 @@ class Clip(ABC):
         self._abort = Event()
 
     @abstractmethod
-    def start(self):
+    def start(self) -> None:
         pass
 
-    def stop(self):
+    def stop(self) -> None:
         if not self._abort.is_set():
             self._aborted = True
             self._abort.set()
 
-    def __str__(self):
+    def __str__(self) -> str:
         return self.name
 
 
@@ -33,22 +35,22 @@ class MP3Clip(Clip):
         super().__init__(os.path.basename(file))
         self.file = file
         self._loaded = Event()
-        self._data = None
+        self._data: Optional[np.array] = None
         Thread(target=self._load, daemon=True).start()
 
-    def start(self):
+    def start(self) -> None:
         while not self._loaded.is_set():
             self._loaded.wait(0.25)
-        duration = len(self._data) / self._sr
+        duration = len(self._data) / self._sr  # type: ignore
         MP3Clip._dev.play(self._data, self._sr)
         self._abort.wait(duration)
 
-    def stop(self):
+    def stop(self) -> None:
         MP3Clip._dev.stop()
         super().stop()
         time.sleep(0.1)
 
-    def _load(self):
+    def _load(self) -> None:
         data, sr = audio2numpy.open_audio(self.file)
         self._data = data
         self._sr = sr
@@ -60,5 +62,5 @@ class Pause(Clip):
         super().__init__("{}s pause".format(duration))
         self.duration = duration
 
-    def start(self):
+    def start(self) -> None:
         self._abort.wait(self.duration)
