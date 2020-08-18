@@ -28,8 +28,6 @@ jobs:
       with:
         # The GitHub API token to use for creating PR reviews
         token: ${{ secrets.GITHUB_TOKEN }}
-        # Args to pass to the flake8 executable
-        args: "--max-line-length 120 ."
       
     - name: Mypy Check
       uses: jpetrucciani/mypy-check@0.761
