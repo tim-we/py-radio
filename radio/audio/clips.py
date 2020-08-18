@@ -1,7 +1,6 @@
 from abc import ABC, abstractmethod
 import audio2numpy
 import sounddevice
-import time
 import os.path
 from threading import Event
 
