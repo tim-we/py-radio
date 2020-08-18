@@ -11,8 +11,8 @@ class Player:
     def __init__(self, library: ClipLibrary):
         self._queue: Queue = LifoQueue()
         self._scheduler = Scheduler(library)
-        self._history = []
-        self._history_len = 7
+        self._history: list = []
+        self._history_len: int = 7
         self._current: Optional[Clip] = None
         self._thread: Optional[Thread] = None
 
