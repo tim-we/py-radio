@@ -17,6 +17,10 @@ window.addEventListener("DOMContentLoaded", () => {
     let last_history = [];
 
     async function update() {
+        if(document.hidden) {
+            return;
+        }
+        
         let info = await api.now();
 
         // update "Now playing"
@@ -40,7 +44,6 @@ window.addEventListener("DOMContentLoaded", () => {
                 history.prepend(elem);
             });
         }
-        
     }
 
     update();
