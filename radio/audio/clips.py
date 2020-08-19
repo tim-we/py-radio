@@ -64,8 +64,11 @@ class MP3Clip(Clip):
 
         duration = len(self._data) / self._sr  # type: ignore
 
-        # play and block thread until completed (or aborted)
+        # play & free memory
         MP3Clip._dev.play(self._data, self._sr)
+        self._data = None
+
+        # block thread until completed (or aborted)
         self._completed.wait(duration)
         self._completed.set()
 
