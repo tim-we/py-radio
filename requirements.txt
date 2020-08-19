@@ -1,10 +1,8 @@
 astroid==2.4.2
-audio2numpy==0.1.2
 certifi==2020.6.20
 cffi==1.14.2
 chardet==3.0.4
 click==7.1.2
-ffmpeg==1.4
 flake8==3.8.3
 Flask==1.1.2
 idna==2.10
@@ -33,3 +31,4 @@ wrapt==1.12.1
 python-telegram-bot==12.8
 python-decouple==3.3
 pytube3==9.6.4
+ffmpeg-python==0.2.0
