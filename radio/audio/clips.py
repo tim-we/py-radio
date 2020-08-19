@@ -1,5 +1,5 @@
 from abc import ABC, abstractmethod
-import audio2numpy
+from radio.audio.reader import ffmpeg_load_audio
 import sounddevice
 import os.path
 from threading import Thread, Event
@@ -69,7 +69,7 @@ class MP3Clip(Clip):
         while True:
             # (pre)load next MP3 clip
             clip = MP3Clip._loading_queue.get()
-            data, sr = audio2numpy.open_audio(clip.file)
+            data, sr = ffmpeg_load_audio(clip.file)
             # store data
             clip._data = data
             clip._sr = sr
