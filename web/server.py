@@ -13,12 +13,10 @@ def create(player: Player, library: ClipLibrary, port: int = 5000) -> None:
 
     @flask.route(api_prefix + "/all", methods=["GET"])
     def api_now() -> Any:
-        # TODO
         return jsonify({
             "status": "ok",
-            "current": "unknown",
-            "history": [],
-            "next": None
+            "current": player.now(),
+            "history": player.get_history()
         })
 
     @flask.route(api_prefix + "/skip", methods=["PUT"])
