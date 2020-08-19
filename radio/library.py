@@ -53,7 +53,7 @@ class ClipPool:
 
     def empty(self) -> bool:
         return len(self.clips) == 0
-    
+
     def next(self) -> str:
         # find a clip that is not in the recent history
         idx = random.randrange(0, len(self.clips))
