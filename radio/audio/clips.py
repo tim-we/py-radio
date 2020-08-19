@@ -84,12 +84,12 @@ class MP3Clip(Clip):
 
 
 class Pause(Clip):
-    def __init__(self, duration: float = 600):
-        super().__init__("{}s pause".format(duration))
+    def __init__(self, duration: float = 10):
+        super().__init__("Pause ({}min)".format(duration))
         self.duration = duration
 
     def start(self) -> None:
-        self._completed.wait(self.duration)
+        self._completed.wait(self.duration * 60)
         self._completed.set()
 
 
