@@ -3,7 +3,7 @@ from radio.player import Player
 from radio.library import ClipLibrary
 from bots.tg import Telegram
 import web.server
-from time import sleep
+from util.internet import await_internet
 
 # user configuration
 cfg = Config("config.json")
@@ -14,7 +14,8 @@ library = ClipLibrary(cfg.get("library"))
 player = Player(library)
 player.start()
 
-sleep(20)
+# the following modules require internet
+await_internet()
 
 # start bots & web server
 if cfg.get("web.enabled"):
