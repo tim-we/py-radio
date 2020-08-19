@@ -30,7 +30,7 @@ def create(player: Player, library: ClipLibrary, port: int = 5000) -> None:
         return jsonify({"status": "ok"})
 
     def start() -> None:
-        print("API will be available at http://localhost:5000{}/".format(api_prefix))
+        print("API will be available at http://localhost:{}{}/".format(port, api_prefix))
         serve(
             flask,
             host="127.0.0.1",
