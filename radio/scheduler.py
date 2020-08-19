@@ -71,7 +71,7 @@ class Scheduler:
             # update & schedule news
             tagesschau.update()
             if not self.tagesschau.latest == "":
-                self._queue.put(MP3Clip(tagesschau.latest))
+                self._queue.put(MP3Clip(tagesschau.latest, "Tagesschau in 100s"))
 
             # sleep 5 min to avoid immediate rescheduling
             time.sleep(5*60)
