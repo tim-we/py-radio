@@ -7,6 +7,7 @@ import os
 from typing import Any
 from re import findall
 from pathlib import Path
+from pytube import YouTube
 
 
 class Telegram:
@@ -25,6 +26,8 @@ class Telegram:
         dispatcher.add_handler(unknown_handler)
         mp3_handler = MessageHandler(Filters.audio, self._download_media)
         dispatcher.add_handler(mp3_handler)
+        youtube_handler = MessageHandler(Filters.regex(r'youtube\.com'), self._youtube)
+        dispatcher.add_handler(youtube_handler)
 
     def start(self) -> None:
         self._updater.start_polling()
@@ -48,8 +51,18 @@ class Telegram:
         else:
             file.download(file_path)
             self._library.music.scan()
-            context.bot.send_message(chat_id=update.effective_chat.id, text="Added `"+file_name+"` to music library.",
+            context.bot.send_message(chat_id=update.effective_chat.id,
+                                     text="Added `{}` to music library.".format(file_name),
                                      parse_mode=ParseMode.MARKDOWN)
+
+    def _youtube(self, update: Any, context: Any) -> None:
+        yt_id = findall(r'watch\?v=(\w+)', update.message.text)[0]
+        url = r'https://www.youtube.com/watch?v={}'.format(yt_id)
+        try:
+            audio = YouTube(url).streams.filter(only_audio=True, subtype='mp4').first()
+            audio.download(output_path=self._library.music.folder, filename=audio.default_filename)
+        except KeyError:
+            context.bot.send_message(chat_id=update.effective_chat.id, text="I cannot access this video.")
 
     @staticmethod
     def _exit(update: Any, context: Any) -> None:
@@ -60,7 +73,7 @@ class Telegram:
             os._exit(0)
 
     def _history(self, update: Any, context: Any) -> None:
-        history_list = ['`'+s+'`' for s in self._player.get_history()]
+        history_list = ['`{}`'.format(s) for s in self._player.get_history()]
         history = '\n'.join(history_list)
         if not history:
             context.bot.send_message(chat_id=update.effective_chat.id, text="The history is empty.")

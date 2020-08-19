@@ -32,3 +32,4 @@ Werkzeug==1.0.1
 wrapt==1.12.1
 python-telegram-bot==12.8
 python-decouple==3.3
+pytube3==9.6.4
