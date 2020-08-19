@@ -1,5 +1,7 @@
 # py-radio
 
+![static analysis](https://github.com/tim-we/py-radio/workflows/static%20analysis/badge.svg)
+
 ## Install
 
 We recommend [using a virtual environment](https://packaging.python.org/guides/installing-using-pip-and-virtual-environments/#creating-a-virtual-environment) for this.
