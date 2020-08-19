@@ -6,21 +6,27 @@ from radio.scheduler import Scheduler
 from radio.library import ClipLibrary
 from typing import Optional, List
 
+HISTORY_LEN: int = 7
+
 
 class Player:
     def __init__(self, library: ClipLibrary):
         self._queue: Queue = LifoQueue()
         self._scheduler = Scheduler(library)
-        self._history: list = []
-        self._history_len: int = 7
+        self._history: List[Clip] = []
         self._current: Optional[Clip] = None
         self._thread: Optional[Thread] = None
 
-    def get_history(self, num: int = 0) -> List[str]:
-        if num > 0:
-            return self._history[-min(num, self._history_len):]
-        else:
-            return self._history
+    def get_history(self, num: int = 0, format_title: str = '{}', format_skip: str = ' (skipped)') -> List[str]:
+        """Returns a list of strings, each representing a clip."""
+        cl = self._history if num > 0 else self._history[-min(num, HISTORY_LEN):]
+        sl = []
+        for clip in cl:
+            t = clip.started
+            assert t is not None
+            sl.append('{:02d}:{:02d} '.format(t.tm_hour, t.tm_min) + format_title.format(clip.__str__())
+                      + format_skip*clip.aborted)
+        return sl
 
     def now(self) -> Optional[Clip]:
         return self._current
@@ -43,12 +49,11 @@ class Player:
             self._thread.start()
 
     def _add_to_history(self, clip: Clip) -> None:
-        if clip.show_in_history and clip.started is not None:
-            t = clip.started
-            self._history.append(
-                "[{:02d}:{:02d}] {}".format(t.tm_hour, t.tm_min, clip.__str__())
-            )
-            if len(self._history) > self._history_len:
+        if clip.show_in_history():
+            # t = clip.started
+            # "[{:02d}:{:02d}] {}".format(t.tm_hour, t.tm_min, clip.__str__())
+            self._history.append(clip)
+            if len(self._history) > HISTORY_LEN:
                 self._history.pop(0)
 
     def _play(self) -> None:
