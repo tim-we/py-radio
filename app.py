@@ -22,5 +22,5 @@ if cfg.get("web.enabled"):
     )
 
 if cfg.get("telegram.enabled"):
-    telegram = Telegram(player, library)
+    telegram = Telegram(cfg.get("telegram.token"), player, library)
     telegram.start()
