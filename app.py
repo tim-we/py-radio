@@ -3,6 +3,7 @@ from radio.player import Player
 from radio.library import ClipLibrary
 from bots.tg import Telegram
 import web.server
+from time import sleep
 
 # user configuration
 cfg = Config("config.json")
@@ -21,6 +22,7 @@ if cfg.get("web.enabled"):
         port=cfg.get("web.port")
     )
 
+sleep(10)
 if cfg.get("telegram.enabled"):
     telegram = Telegram(cfg.get("telegram.token"), player, library)
     telegram.start()
