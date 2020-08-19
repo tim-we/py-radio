@@ -1,31 +1,26 @@
+from config import Config
 from radio.player import Player
 from radio.library import ClipLibrary
 from bots.tg import Telegram
-import json
-import os
 import web.server
 
-# defaults
-lib_path = "test_library"
-cfg_path = "config.json"
-
-# user config
-if os.path.exists(cfg_path):
-    with open(cfg_path, "r") as config_file:
-        cfg = json.loads(config_file.read())
-        print("Using config file", config_file.name)
-        if "library" in cfg:
-            lib_path = cfg["library"]
-else:
-    print("Warning:", cfg_path, "not found.")
+# user configuration
+cfg = Config("config.json")
 
 # start radio
 print("Radio starting...")
-library = ClipLibrary(lib_path)
+library = ClipLibrary(cfg.get("library"))
 player = Player(library)
 player.start()
 
 # start bots & web server
-web.server.create(player, library)
-telegram = Telegram(player, library)
-telegram.start()
+if cfg.get("web.enabled"):
+    web.server.create(
+        player=player,
+        library=library,
+        port=cfg.get("web.port")
+    )
+
+if cfg.get("telegram.enabled"):
+    telegram = Telegram(player, library)
+    telegram.start()

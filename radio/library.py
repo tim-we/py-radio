@@ -30,15 +30,19 @@ class ClipLibrary:
             self.night.scan()
             self.other.scan()
 
-    def search_clips(self, search: str) -> List[str]:
+    def search_clips(self, search: str, short_path: bool = False) -> List[str]:
+        # get all paths matching the search term
         raw_results = chain(
             self.music.filter(search),
             self.night.filter(search),
             self.other.filter(search)
         )
-        n = len(self.folder)
-        if not self.folder[-1] == os.sep:
-            n += 1
+        # return only relative paths if short_path is true
+        n = 0
+        if short_path:
+            n = len(self.folder)
+            if not self.folder[-1] == os.sep:
+                n += 1
         clean_results = map(lambda x: x[n:], raw_results)
         return list(clean_results)
 
