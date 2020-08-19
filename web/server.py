@@ -5,23 +5,23 @@ from typing import Any
 from threading import Thread
 from waitress import serve
 
-api_prefix = "/radio/api/v1.0"
+api_prefix = "/api/v1.0"
 
 
 def create(player: Player, library: ClipLibrary, port: int = 5000) -> None:
     flask = Flask(__name__.split('.')[0])
 
     # -------------- WEBSITE --------------
-    @flask.route("/radio", methods=["GET"])
+    @flask.route("/", methods=["GET"])
     def web_main() -> Any:
         return render_template("web.html")
 
-    @flask.route("/radio/static/<path:path>")
+    @flask.route("/static/<path:path>")
     def web_static(path: Any) -> Any:
         return send_from_directory("static", path)
 
     # ---------------- API ----------------
-    @flask.route(api_prefix + "/all", methods=["GET"])
+    @flask.route(api_prefix + "/now", methods=["GET"])
     def api_now() -> Any:
         return jsonify({
             "status": "ok",
@@ -43,7 +43,7 @@ def create(player: Player, library: ClipLibrary, port: int = 5000) -> None:
                 "message": "Invalid search term."
             })
         else:
-            results = library.search_clips(search)
+            results = library.search_clips(search, short_path=True)
             return jsonify({
                 "status": "ok",
                 "search": search,
