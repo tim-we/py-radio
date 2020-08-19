@@ -2,7 +2,7 @@ from queue import Queue
 import time
 import random
 from threading import Thread
-from radio.audio.clips import Clip, MP3Clip
+from radio.audio.clips import Clip, AudioClip
 from radio.library import ClipLibrary
 from radio.services.tagesschau import Tagesschau100s
 
@@ -27,21 +27,21 @@ class Scheduler:
             if self._force_song:
                 self._other_clips = 0
                 self._force_song = False
-                return MP3Clip(self.library.music.next())
+                return AudioClip(self.library.music.next())
 
             if self._host_time():
                 self._last_host_time = time.time()
                 self._other_clips = 0
                 self._force_song = True
-                clip = MP3Clip(self.library.hosts.next())
+                clip = AudioClip(self.library.hosts.next())
                 clip.hide = True
                 return clip
 
             if self._other_clips > 2 or random.uniform(0, 1) < 0.7:
-                return MP3Clip(self.library.music.next())
+                return AudioClip(self.library.music.next())
             else:
                 self._other_clips += 1
-                return MP3Clip(self.library.other.next())
+                return AudioClip(self.library.other.next())
 
     def reset(self, hard: bool = False) -> None:
         self._force_song = False
@@ -71,7 +71,7 @@ class Scheduler:
             # update & schedule news
             tagesschau.update()
             if not self.tagesschau.latest == "":
-                self._queue.put(MP3Clip(tagesschau.latest, "Tagesschau in 100s"))
+                self._queue.put(AudioClip(tagesschau.latest, "Tagesschau in 100s"))
 
             # sleep 5 min to avoid immediate rescheduling
             time.sleep(5*60)

@@ -2,7 +2,7 @@ from telegram.ext import Updater, CommandHandler, MessageHandler, Filters
 from telegram.parsemode import ParseMode
 from radio.player import Player
 from radio.library import ClipLibrary
-from radio.audio.clips import MP3Clip, describe
+from radio.audio.clips import AudioClip, describe
 import os
 from typing import Any
 from re import findall
@@ -51,7 +51,7 @@ class Telegram:
         else:
             file.download(file_path)
             self._library.music.scan()
-            self._player.schedule(MP3Clip(file_path))
+            self._player.schedule(AudioClip(file_path))
             context.bot.send_message(chat_id=update.effective_chat.id,
                                      text="Added `{}` to music library.".format(file_name),
                                      parse_mode=ParseMode.MARKDOWN)
@@ -63,7 +63,7 @@ class Telegram:
             audio = YouTube(url).streams.filter(only_audio=True, subtype='mp4').first()
             file_path = audio.download(output_path=self._library.music.folder, filename=audio.default_filename)
             self._library.music.scan()
-            self._player.schedule(MP3Clip(file_path))
+            self._player.schedule(AudioClip(file_path))
         except KeyError:
             context.bot.send_message(chat_id=update.effective_chat.id, text="I cannot access this video.")
 

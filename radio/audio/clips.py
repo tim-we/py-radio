@@ -33,7 +33,7 @@ class Clip(ABC):
         return self.name
 
 
-class MP3Clip(Clip):
+class AudioClip(Clip):
     _dev = sounddevice
     _loading_queue: Queue = Queue()
     loading_thread: Optional[Thread] = None
@@ -48,10 +48,10 @@ class MP3Clip(Clip):
         self._sr: int
 
         # MP3 files get preloaded (read & decoded)
-        if MP3Clip.loading_thread is None:
-            MP3Clip.loading_thread = Thread(target=MP3Clip._load, daemon=True)
-            MP3Clip.loading_thread.start()
-        MP3Clip._loading_queue.put(self)
+        if AudioClip.loading_thread is None:
+            AudioClip.loading_thread = Thread(target=AudioClip._load, daemon=True)
+            AudioClip.loading_thread.start()
+        AudioClip._loading_queue.put(self)
 
     def start(self) -> None:
         super().start()
@@ -65,7 +65,7 @@ class MP3Clip(Clip):
         duration = len(self._data) / self._sr  # type: ignore
 
         # play & free memory
-        MP3Clip._dev.play(self._data, self._sr)
+        AudioClip._dev.play(self._data, self._sr)
         self._data = None
 
         # block thread until completed (or aborted)
@@ -73,7 +73,7 @@ class MP3Clip(Clip):
         self._completed.set()
 
     def stop(self) -> None:
-        MP3Clip._dev.stop()
+        AudioClip._dev.stop()
         super().stop()
         time.sleep(0.1)
 
@@ -81,7 +81,7 @@ class MP3Clip(Clip):
     def _load() -> None:
         while True:
             # (pre)load next MP3 clip
-            clip = MP3Clip._loading_queue.get()
+            clip = AudioClip._loading_queue.get()
             data, sr = ffmpeg_load_audio(clip.file)
             # store data
             clip._data = data
