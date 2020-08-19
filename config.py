@@ -12,7 +12,7 @@ defaults = {
     },
     "web": {
         "enabled": False,
-        "port": 5000
+        "port": 80
     }
 }
 

@@ -4,12 +4,16 @@ from flask import Flask, jsonify, render_template, send_from_directory
 from typing import Any
 from threading import Thread
 from waitress import serve
+import ifcfg
 
 api_prefix = "/api/v1.0"
 
 
-def create(player: Player, library: ClipLibrary, port: int = 5000) -> None:
+def create(player: Player, library: ClipLibrary, host: str = "", port: int = 80) -> None:
     flask = Flask(__name__.split('.')[0])
+
+    if host == "":
+        host = ifcfg.default_interface()["inet"]
 
     # -------------- WEBSITE --------------
     @flask.route("/", methods=["GET"])
@@ -57,12 +61,12 @@ def create(player: Player, library: ClipLibrary, port: int = 5000) -> None:
         return jsonify({"status": "ok"})
 
     def start() -> None:
-        print("API will be available at http://localhost:{}{}/".format(port, api_prefix))
         serve(
             flask,
-            host="127.0.0.1",
+            host=host,
             port=port,
             ident="py-radio web-server"
         )
+        print("API will be available at http://{}:{}{}/".format(host, port, api_prefix))
 
     Thread(target=start, daemon=True).start()
