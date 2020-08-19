@@ -33,7 +33,9 @@ class Scheduler:
                 self._last_host_time = time.time()
                 self._other_clips = 0
                 self._force_song = True
-                return MP3Clip(self.library.hosts.next())
+                clip = MP3Clip(self.library.hosts.next())
+                clip.show_in_history = False
+                return clip
 
             if self._other_clips > 2 or random.uniform(0, 1) < 0.7:
                 return MP3Clip(self.library.music.next())

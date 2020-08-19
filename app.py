@@ -14,6 +14,8 @@ library = ClipLibrary(cfg.get("library"))
 player = Player(library)
 player.start()
 
+sleep(20)
+
 # start bots & web server
 if cfg.get("web.enabled"):
     web.server.create(
@@ -22,7 +24,6 @@ if cfg.get("web.enabled"):
         port=cfg.get("web.port")
     )
 
-sleep(20)
 if cfg.get("telegram.enabled"):
     telegram = Telegram(cfg.get("telegram.token"), player, library)
     telegram.start()

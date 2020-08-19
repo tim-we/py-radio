@@ -5,6 +5,7 @@ from typing import Any
 from threading import Thread
 from waitress import serve
 import ifcfg
+from radio.audio.clips import Pause, describe
 
 api_prefix = "/api/v1.0"
 
@@ -29,7 +30,7 @@ def create(player: Player, library: ClipLibrary, host: str = "", port: int = 80)
     def api_now() -> Any:
         return jsonify({
             "status": "ok",
-            "current": player.now(),
+            "current": describe(player.now()),
             "history": player.get_history(),
             "library": {
                 "music": library.music.size() + library.night.size(),
@@ -57,6 +58,13 @@ def create(player: Player, library: ClipLibrary, host: str = "", port: int = 80)
 
     @flask.route(api_prefix + "/skip", methods=["PUT"])
     def api_skip() -> Any:
+        player.skip()
+        return jsonify({"status": "ok"})
+
+    @flask.route(api_prefix + "/pause", methods=["POST", "PUT"])
+    def api_pause() -> Any:
+        if not isinstance(player.now(), Pause):
+            player.schedule(Pause())
         player.skip()
         return jsonify({"status": "ok"})
 
