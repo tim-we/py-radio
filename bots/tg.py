@@ -2,7 +2,7 @@ from telegram.ext import Updater, CommandHandler, MessageHandler, Filters
 from telegram.parsemode import ParseMode
 from radio.player import Player
 from radio.library import ClipLibrary
-from decouple import config
+from radio.audio.clips import MP3Clip
 import os
 from typing import Any
 from re import findall
@@ -11,10 +11,10 @@ from pytube import YouTube
 
 
 class Telegram:
-    def __init__(self, player: Player, library: ClipLibrary):
+    def __init__(self, token: str, player: Player, library: ClipLibrary):
         self._player = player
         self._library = library
-        self._updater = Updater(token=config('TG_TOKEN'), use_context=True)
+        self._updater = Updater(token=token, use_context=True)
         dispatcher = self._updater.dispatcher
         exit_handler = CommandHandler('exit', self._exit)
         dispatcher.add_handler(exit_handler)
@@ -51,6 +51,7 @@ class Telegram:
         else:
             file.download(file_path)
             self._library.music.scan()
+            self._player.schedule(MP3Clip(file_path))
             context.bot.send_message(chat_id=update.effective_chat.id,
                                      text="Added `{}` to music library.".format(file_name),
                                      parse_mode=ParseMode.MARKDOWN)
@@ -60,7 +61,9 @@ class Telegram:
         url = r'https://www.youtube.com/watch?v={}'.format(yt_id)
         try:
             audio = YouTube(url).streams.filter(only_audio=True, subtype='mp4').first()
-            audio.download(output_path=self._library.music.folder, filename=audio.default_filename)
+            file_path = audio.download(output_path=self._library.music.folder, filename=audio.default_filename)
+            self._library.music.scan()
+            self._player.schedule(MP3Clip(file_path))
         except KeyError:
             context.bot.send_message(chat_id=update.effective_chat.id, text="I cannot access this video.")
 
