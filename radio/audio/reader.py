@@ -4,7 +4,7 @@ import ffmpeg
 
 # load_audio can not detect the input type
 def ffmpeg_load_audio(filename: str, sample_rate: int = 48000, mono: bool = False, normalize: bool = True,
-                      in_type=np.int16, out_type=np.float32) -> np.ndarray:  # type: ignore
+                      in_type: int = np.int16, out_type: float = np.float32) -> np.ndarray:  # type: ignore
     channels = 1 if mono else 2
     format_strings = {
         np.float64: 'f64le',
