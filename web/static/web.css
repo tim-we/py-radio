@@ -1,0 +1,64 @@
+html, body {
+    margin: 0px;
+    padding: 0px;
+    font-family: sans-serif;
+}
+
+div {
+    margin: 0px;
+    padding: 0px;
+}
+
+#header {
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    right: 0px;
+    height: 100px;
+
+    background-image: linear-gradient(#1e415e 10%,#2b5b84 90%);
+    color: white;
+    
+    text-align: center;
+    line-height: 100px;
+}
+
+#header h1 {
+    margin: 0px;
+    padding: 0px;
+}
+
+#content {
+    position: absolute;
+    top: 100px;
+    left: 0px;
+    right: 0px;
+}
+
+.section {
+    width: 90%;
+    width: calc(100% - 20px);
+    margin-top: 10px;
+    padding-left: 10px;
+    padding-right: 10px;
+    padding-top: 5px;
+    padding-bottom: 5px;
+}
+
+#now {
+    background-color: #ffd343;
+    color: rgb(90,90,90);
+}
+
+#now > .title {
+    font-size: 14px;
+    font-weight: bold;
+}
+
+#now > #current-clip {
+    text-align: center;
+}
+
+#controls {
+    text-align: right;
+}
