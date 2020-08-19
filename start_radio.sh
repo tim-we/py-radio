@@ -12,6 +12,7 @@ do
   if [ "$exitcode" == 69 ]
   then
     git pull
+    pip install -r requirements.txt
     exitcode=0
   fi
   sleep 1
