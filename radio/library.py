@@ -3,7 +3,8 @@ import os
 import random
 import time
 from threading import Thread
-from typing import List
+from typing import List, Iterable
+from itertools import chain
 
 
 class ClipLibrary:
@@ -13,7 +14,8 @@ class ClipLibrary:
         self.music = ClipPool(os.path.join(folder, "music"))
         self.night = ClipPool(os.path.join(folder, "night"))
         self.other = ClipPool(folder)
-        print(" ->", self.music.size(), "songs")
+        self.folder = folder
+        print(" ->", self.music.size() + self.night.size(), "songs")
         print(" ->", self.hosts.size(), "host clips")
         Thread(target=self._update_thread, daemon=True)
 
@@ -28,6 +30,18 @@ class ClipLibrary:
             self.night.scan()
             self.other.scan()
 
+    def search_clips(self, search: str) -> List[str]:
+        raw_results = chain(
+            self.music.filter(search),
+            self.night.filter(search),
+            self.other.filter(search)
+        )
+        n = len(self.folder)
+        if not self.folder[-1] == os.sep:
+            n += 1
+        clean_results = map(lambda x: x[n:], raw_results)
+        return list(clean_results)
+
 
 class ClipPool:
     def __init__(self, folder: str):
@@ -37,6 +51,9 @@ class ClipPool:
         self.folder = folder
         self.scan()
 
+    def empty(self) -> bool:
+        return len(self.clips) == 0
+    
     def next(self) -> str:
         # find a clip that is not in the recent history
         idx = random.randrange(0, len(self.clips))
@@ -50,8 +67,12 @@ class ClipPool:
 
         return self.clips[idx]
 
-    def empty(self) -> bool:
-        return len(self.clips) == 0
+    def filter(self, search: str) -> Iterable[str]:
+        ls = search.lower()
+        return filter(
+            lambda x: ls in x.lower(),
+            self.clips
+        )
 
     def size(self) -> int:
         return len(self.clips)

@@ -9,7 +9,7 @@ api_prefix = "/radio/api/v1.0"
 
 
 def create(player: Player, library: ClipLibrary, port: int = 5000) -> None:
-    flask = Flask("py-radio web-server")
+    flask = Flask(__name__.split('.')[0])
 
     @flask.route(api_prefix + "/all", methods=["GET"])
     def api_now() -> Any:
@@ -23,6 +23,23 @@ def create(player: Player, library: ClipLibrary, port: int = 5000) -> None:
                 "other": library.other.size()
             }
         })
+
+    @flask.route(api_prefix + "/search/<string:search>", methods=["GET"])
+    def api_search(search: str) -> Any:
+        search = search.strip()[0:42]
+        if len(search) == 0:
+            return jsonify({
+                "status": "error",
+                "message": "Invalid search term."
+            })
+        else:
+            results = library.search_clips(search)
+            return jsonify({
+                "status": "ok",
+                "search": search,
+                "results": results[0:100],
+                "clipped": len(results) > 100
+            })
 
     @flask.route(api_prefix + "/skip", methods=["PUT"])
     def api_skip() -> Any:
