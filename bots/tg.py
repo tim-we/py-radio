@@ -76,7 +76,7 @@ class Telegram:
             os._exit(0)
 
     def _history(self, update: Any, context: Any) -> None:
-        history = '\n'.join(self._player.get_history(fmt="[{:02d}:{:02d}] `{}`"))
+        history = '\n'.join(self._player.get_history(format_title='`{}`'))
         if not history:
             context.bot.send_message(chat_id=update.effective_chat.id, text="The history is empty.")
         else:

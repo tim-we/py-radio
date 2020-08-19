@@ -11,7 +11,7 @@ from typing import Optional
 
 class Clip(ABC):
     def __init__(self, name: str):
-        self._aborted: bool = False
+        self.aborted: bool = False
         self.user_req: bool = False
         self.name: str = name
         self._completed = Event()
@@ -23,17 +23,14 @@ class Clip(ABC):
 
     def stop(self) -> None:
         if not self._completed.is_set():
-            self._aborted = True
+            self.aborted = True
             self._completed.set()
 
     def show_in_history(self) -> bool:
         return (not self.hide) and (self.started is not None)
 
     def __str__(self) -> str:
-        if self._aborted:
-            return self.name + " (skipped)"
-        else:
-            return self.name
+        return self.name
 
 
 class MP3Clip(Clip):
@@ -58,7 +55,7 @@ class MP3Clip(Clip):
 
     def start(self) -> None:
         super().start()
-        if self._aborted:
+        if self.aborted:
             return
 
         # wait until MP3 file is loaded

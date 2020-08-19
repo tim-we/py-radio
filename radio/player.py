@@ -17,14 +17,15 @@ class Player:
         self._current: Optional[Clip] = None
         self._thread: Optional[Thread] = None
 
-    def get_history(self, num: int = 0, fmt: str = "[{:02d}:{:02d}] {}") -> List[str]:
+    def get_history(self, num: int = 0, format_title: str = '{}', format_skip: str = ' (skipped)') -> List[str]:
         """Returns a list of strings, each representing a clip."""
         cl = self._history if num > 0 else self._history[-min(num, HISTORY_LEN):]
         sl = []
         for clip in cl:
             t = clip.started
             assert t is not None
-            sl.append(fmt.format(t.tm_hour, t.tm_min, clip.__str__()))
+            sl.append('{:02d}:{:02d} '.format(t.tm_hour, t.tm_min) + format_title.format(clip.__str__())
+                      + format_skip*clip.aborted)
         return sl
 
     def now(self) -> Optional[Clip]:
