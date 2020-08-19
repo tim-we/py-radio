@@ -1,6 +1,6 @@
 from radio.player import Player
 from radio.library import ClipLibrary
-from flask import Flask, jsonify
+from flask import Flask, jsonify, render_template, send_from_directory
 from typing import Any
 from threading import Thread
 from waitress import serve
@@ -11,6 +11,16 @@ api_prefix = "/radio/api/v1.0"
 def create(player: Player, library: ClipLibrary, port: int = 5000) -> None:
     flask = Flask(__name__.split('.')[0])
 
+    # -------------- WEBSITE --------------
+    @flask.route("/radio", methods=["GET"])
+    def web_main() -> Any:
+        return render_template("web.html")
+
+    @flask.route("/radio/static/<path:path>")
+    def web_static(path: Any) -> Any:
+        return send_from_directory("static", path)
+
+    # ---------------- API ----------------
     @flask.route(api_prefix + "/all", methods=["GET"])
     def api_now() -> Any:
         return jsonify({
