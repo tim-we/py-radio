@@ -4,8 +4,23 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>py-radio web interface</title>
+    <link rel="stylesheet" href="static/web.css">
+    <script type="module" src="static/web.js"></script>
 </head>
 <body>
-    Hello world!
+    <div id="header">
+        <h1>py-radio</h1>
+    </div>
+    <div id="content">
+        <div id="now" class="section">
+            <div class="title">Now playing:</div>
+            <div id="current-clip">-</div>
+        </div>
+        <div id="controls" class="section">
+            <button id="skip">skip</button>
+        </div>
+        <div id="history" class="section"></div>
+        <div id="stats" class="section"></div>
+    </div>
 </body>
 </html>
