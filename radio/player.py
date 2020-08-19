@@ -43,8 +43,11 @@ class Player:
             self._thread.start()
 
     def _add_to_history(self, clip: Clip) -> None:
-        if clip.show_in_history:
-            self._history.append(clip.__str__())
+        if clip.show_in_history and clip.started is not None:
+            t = clip.started
+            self._history.append(
+                "[{:02d}:{:02d}] {}".format(t.tm_hour, t.tm_min, clip.__str__())
+            )
             if len(self._history) > self._history_len:
                 self._history.pop(0)
 

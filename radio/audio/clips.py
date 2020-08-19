@@ -1,4 +1,4 @@
-from abc import ABC, abstractmethod
+from abc import ABC
 from radio.audio.reader import ffmpeg_load_audio
 import sounddevice
 import os.path
@@ -16,10 +16,10 @@ class Clip(ABC):
         self.name: str = name
         self._completed = Event()
         self.show_in_history: bool = True
+        self.started: Optional[time.struct_time] = None
 
-    @abstractmethod
     def start(self) -> None:
-        pass
+        self.started = time.localtime()
 
     def stop(self) -> None:
         if not self._completed.is_set():
@@ -38,8 +38,9 @@ class MP3Clip(Clip):
     _loading_queue: Queue = Queue()
     loading_thread: Optional[Thread] = None
 
-    def __init__(self, file: str):
-        name = os.path.splitext(os.path.basename(file))[0]
+    def __init__(self, file: str, name: str = ""):
+        if name == "":
+            name = os.path.splitext(os.path.basename(file))[0]
         super().__init__(name)
         self.file = file
         self._loaded = Event()
@@ -53,6 +54,10 @@ class MP3Clip(Clip):
         MP3Clip._loading_queue.put(self)
 
     def start(self) -> None:
+        super().start()
+        if self._aborted:
+            return
+
         # wait until MP3 file is loaded
         if not self._loaded.is_set():
             self._loaded.wait()
@@ -89,6 +94,7 @@ class Pause(Clip):
         self.duration = duration
 
     def start(self) -> None:
+        super().start()
         self._completed.wait(self.duration * 60)
         self._completed.set()
 
