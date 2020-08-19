@@ -46,6 +46,12 @@ window.addEventListener("DOMContentLoaded", () => {
         }
     }
 
+    document.addEventListener("visibilitychange", function() {
+        if (document.visibilityState === "visible") {
+            update();
+        }
+    });
+
     update();
     window.setInterval(update, 3141);
 });
