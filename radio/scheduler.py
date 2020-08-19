@@ -34,7 +34,7 @@ class Scheduler:
                 self._other_clips = 0
                 self._force_song = True
                 clip = MP3Clip(self.library.hosts.next())
-                clip.show_in_history = False
+                clip.hide = True
                 return clip
 
             if self._other_clips > 2 or random.uniform(0, 1) < 0.7:

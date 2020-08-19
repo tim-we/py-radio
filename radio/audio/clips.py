@@ -15,7 +15,7 @@ class Clip(ABC):
         self.user_req: bool = False
         self.name: str = name
         self._completed = Event()
-        self.show_in_history: bool = True
+        self.hide: bool = False
         self.started: Optional[time.struct_time] = None
 
     def start(self) -> None:
@@ -25,6 +25,9 @@ class Clip(ABC):
         if not self._completed.is_set():
             self._aborted = True
             self._completed.set()
+
+    def show_in_history(self) -> bool:
+        return (not self.hide) and (self.started is not None)
 
     def __str__(self) -> str:
         if self._aborted:
