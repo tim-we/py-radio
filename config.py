@@ -34,8 +34,8 @@ class Config:
 
         Returns default value if key does not exist
         """
-        u_obj = self._data
-        d_obj = defaults
+        u_obj: Any = self._data
+        d_obj: Any = defaults
         for key in path.split("."):
             if key in u_obj:
                 u_obj = u_obj[key]
