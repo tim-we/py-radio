@@ -49,6 +49,7 @@ class ClipLibrary:
 
 class ClipPool:
     def __init__(self, folder: str):
+        assert os.path.exists(folder), "The folder for this ClipPool does not exist"
         self.clips: List[str] = []
         self._history: List[int] = []
         self._history_len: int = 0
@@ -59,6 +60,8 @@ class ClipPool:
         return len(self.clips) == 0
 
     def next(self) -> str:
+        assert not self.empty(), "Cannot pick clip from empty pool"
+
         # find a clip that is not in the recent history
         idx = random.randrange(0, len(self.clips))
         while idx in self._history:

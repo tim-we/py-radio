@@ -22,11 +22,8 @@ class Player:
         else:
             return self._history
 
-    def now(self) -> str:
-        if self._current is not None:
-            return self._current.name
-        else:
-            return "silence"
+    def now(self) -> Optional[Clip]:
+        return self._current
 
     def schedule(self, clip: Clip) -> None:
         clip.user_req = True
@@ -45,10 +42,14 @@ class Player:
             self._thread = Thread(target=self._play, daemon=False)
             self._thread.start()
 
-    def _add_to_history(self, name: str) -> None:
-        self._history.append(name)
-        if len(self._history) > self._history_len:
-            self._history.pop(0)
+    def _add_to_history(self, clip: Clip) -> None:
+        if clip.show_in_history and clip.started is not None:
+            t = clip.started
+            self._history.append(
+                "[{:02d}:{:02d}] {}".format(t.tm_hour, t.tm_min, clip.__str__())
+            )
+            if len(self._history) > self._history_len:
+                self._history.pop(0)
 
     def _play(self) -> None:
         while True:
@@ -63,10 +64,10 @@ class Player:
             clip = self._queue.get()
             print("Playing", clip)
             self._current = clip
-            self._add_to_history(clip.name)
             try:
                 clip.start()
             except Exception as e:
                 print("Unexpected error", e)
                 time.sleep(1.0)
+            self._add_to_history(clip)
             self._current = None

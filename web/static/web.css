@@ -50,15 +50,40 @@ div {
     color: rgb(90,90,90);
 }
 
-#now > .title {
+.section > .title {
     font-size: 14px;
     font-weight: bold;
+    margin-bottom: 5px;
 }
 
 #now > #current-clip {
+    color: rgb(64,64,64);
     text-align: center;
 }
 
 #controls {
     text-align: right;
+}
+
+#history {
+    background-color: rgb(200,200,200);
+    color: rgb(42,42,42);
+}
+
+#history .title {
+    color: rgb(80,80,80);
+}
+
+#history .clip {
+    margin-bottom: 4px;
+    padding-top: 3px;
+    padding-bottom: 3px;
+}
+
+#history .clip:hover {
+    background-color: rgba(16,16,16,0.1);
+}
+
+#history-clips {
+    text-align: center;
 }

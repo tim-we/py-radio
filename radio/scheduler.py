@@ -33,7 +33,9 @@ class Scheduler:
                 self._last_host_time = time.time()
                 self._other_clips = 0
                 self._force_song = True
-                return MP3Clip(self.library.hosts.next())
+                clip = MP3Clip(self.library.hosts.next())
+                clip.show_in_history = False
+                return clip
 
             if self._other_clips > 2 or random.uniform(0, 1) < 0.7:
                 return MP3Clip(self.library.music.next())
@@ -69,7 +71,7 @@ class Scheduler:
             # update & schedule news
             tagesschau.update()
             if not self.tagesschau.latest == "":
-                self._queue.put(MP3Clip(tagesschau.latest))
+                self._queue.put(MP3Clip(tagesschau.latest, "Tagesschau in 100s"))
 
             # sleep 5 min to avoid immediate rescheduling
             time.sleep(5*60)
