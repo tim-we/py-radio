@@ -16,7 +16,12 @@ def create(player: Player, library: ClipLibrary, port: int = 5000) -> None:
         return jsonify({
             "status": "ok",
             "current": player.now(),
-            "history": player.get_history()
+            "history": player.get_history(),
+            "library": {
+                "music": library.music.size() + library.night.size(),
+                "hosts": library.hosts.size(),
+                "other": library.other.size()
+            }
         })
 
     @flask.route(api_prefix + "/skip", methods=["PUT"])
@@ -25,6 +30,7 @@ def create(player: Player, library: ClipLibrary, port: int = 5000) -> None:
         return jsonify({"status": "ok"})
 
     def start() -> None:
+        print("API will be available at http://localhost:5000{}/".format(api_prefix))
         serve(
             flask,
             host="127.0.0.1",
