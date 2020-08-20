@@ -45,19 +45,19 @@ class Player:
 
     def start(self) -> None:
         if self._thread is None:
-            self._thread = Thread(target=self._play, daemon=False)
+            self._thread = Thread(target=self._play, name="PlayerThread", daemon=False)
             self._thread.start()
 
     def _add_to_history(self, clip: Clip) -> None:
         if clip.show_in_history():
-            # t = clip.started
-            # "[{:02d}:{:02d}] {}".format(t.tm_hour, t.tm_min, clip.__str__())
             self._history.append(clip)
             if len(self._history) > HISTORY_LEN:
                 self._history.pop(0)
 
     def _play(self) -> None:
         while True:
+            time.sleep(0.1)
+
             if self._queue.empty():
                 next_clip = self._scheduler.next()
                 if isinstance(next_clip, Clip):

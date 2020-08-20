@@ -17,7 +17,7 @@ class ClipLibrary:
         self.folder = folder
         print(" ->", self.music.size() + self.night.size(), "songs")
         print(" ->", self.hosts.size(), "host clips")
-        Thread(target=self._update_thread, daemon=True)
+        Thread(target=self._update_thread, name="LibUpdateThread", daemon=True)
 
     def _update_thread(self) -> None:
         while(True):

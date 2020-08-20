@@ -17,6 +17,7 @@ class Clip(ABC):
         self._completed = Event()
         self.hide: bool = False
         self.started: Optional[time.struct_time] = None
+        self.duration: float = 0.0
 
     def start(self) -> None:
         self.started = time.localtime()
@@ -43,13 +44,13 @@ class AudioClip(Clip):
             name = os.path.splitext(os.path.basename(file))[0]
         super().__init__(name)
         self.file = file
-        self._loaded = Event()
+        self.loaded = Event()
         self._data: Optional[np.array] = None
         self._sr: int
 
-        # MP3 files get preloaded (read & decoded)
+        # audio files get preloaded (read & decoded)
         if AudioClip.loading_thread is None:
-            AudioClip.loading_thread = Thread(target=AudioClip._load, daemon=True)
+            AudioClip.loading_thread = Thread(target=AudioClip._load, name="LoadingThread", daemon=True)
             AudioClip.loading_thread.start()
         AudioClip._loading_queue.put(self)
 
@@ -59,17 +60,16 @@ class AudioClip(Clip):
             return
 
         # wait until MP3 file is loaded
-        if not self._loaded.is_set():
-            self._loaded.wait()
-
-        duration = len(self._data) / self._sr  # type: ignore
+        if not self.loaded.is_set():
+            self.loaded.wait()
+        assert self._data is not None
 
         # play & free memory
         AudioClip._dev.play(self._data, self._sr)
         self._data = None
 
         # block thread until completed (or aborted)
-        self._completed.wait(duration)
+        self._completed.wait(self.duration)
         self._completed.set()
 
     def stop(self) -> None:
@@ -80,14 +80,15 @@ class AudioClip(Clip):
     @staticmethod
     def _load() -> None:
         while True:
-            # (pre)load next MP3 clip
+            # (pre)load next audio clip
             clip = AudioClip._loading_queue.get()
             data, sr = ffmpeg_load_audio(clip.file)
+            clip.duration = len(data) / sr  # type: ignore
             # store data
             clip._data = data
             clip._sr = sr
             # send signal that the clip is loaded as .start() might be waiting
-            clip._loaded.set()
+            clip.loaded.set()
             time.sleep(0.1)
 
 
