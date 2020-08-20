@@ -1,5 +1,6 @@
 import numpy as np
 import ffmpeg
+import os
 
 
 # load_audio can not detect the input type
@@ -14,9 +15,10 @@ def ffmpeg_load_audio(filename: str, sample_rate: int = 48000, mono: bool = Fals
         np.uint32: 'u32le'
     }
     format_string = format_strings[in_type]
+    num_threads = max(1, os.cpu_count()//2)
 
     out, err = (ffmpeg
-                .input(filename)
+                .input(filename, threads=num_threads)
                 .output('-', format=format_string, acodec='pcm_'+format_string, ar=str(sample_rate), ac=str(channels))
                 .overwrite_output()
                 .run(capture_stdout=True, quiet=True)
