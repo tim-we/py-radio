@@ -1,15 +1,9 @@
 import * as api from "./api.js"
 
 window.addEventListener("DOMContentLoaded", () => {
-    document.getElementById("skip").addEventListener("click", async (e) => {
-        await api.skip();
-        update();
-    });
+    api.button(document.getElementById("pause"), "/pause", "POST", update)
 
-    document.getElementById("pause").addEventListener("click", async (e) => {
-        await api.pause();
-        update();
-    });
+    api.button(document.getElementById("skip"), "/skip", "PUT", update);
 
     const current = document.getElementById("current-clip");
     const history = document.getElementById("history-clips");
