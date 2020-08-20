@@ -17,6 +17,7 @@ class Clip(ABC):
         self._completed = Event()
         self.hide: bool = False
         self.started: Optional[time.struct_time] = None
+        self.duration: float = 0.0
 
     def start(self) -> None:
         self.started = time.localtime()
@@ -61,15 +62,14 @@ class AudioClip(Clip):
         # wait until MP3 file is loaded
         if not self._loaded.is_set():
             self._loaded.wait()
-
-        duration = len(self._data) / self._sr  # type: ignore
+        assert self._data is not None
 
         # play & free memory
         AudioClip._dev.play(self._data, self._sr)
         self._data = None
 
         # block thread until completed (or aborted)
-        self._completed.wait(duration)
+        self._completed.wait(self.duration)
         self._completed.set()
 
     def stop(self) -> None:
@@ -80,9 +80,10 @@ class AudioClip(Clip):
     @staticmethod
     def _load() -> None:
         while True:
-            # (pre)load next MP3 clip
+            # (pre)load next audio clip
             clip = AudioClip._loading_queue.get()
             data, sr = ffmpeg_load_audio(clip.file)
+            clip.duration = len(data) / sr  # type: ignore
             # store data
             clip._data = data
             clip._sr = sr
