@@ -1,7 +1,7 @@
 const API_PATH = "http://" + window.location.host + "/api/v1.0";
 console.log("API path", API_PATH);
 
-async function simple_req(path, method = "GET") {
+export async function api_request(path, method = "GET") {
     let init = {
         method: method,
         cache: "no-store",
@@ -13,13 +13,29 @@ async function simple_req(path, method = "GET") {
 } 
 
 export function now() {
-    return simple_req("/now");
+    return api_request("/now");
 }
 
-export function skip() {
-    return simple_req("/skip", "PUT");
-}
+export function button(btn, path, method = "GET", onsuccess) {
+    btn.addEventListener("click", async (e) => {
+        if(btn.classList.contains("active")) {
+            console.log("Ignoring button click because it is still active.");
+            return;
+        }
+        
+        btn.classList.add("active");
+        let success = true;
+        await api_request(path, method).catch(
+            e => {
+                console.error(e);
+                success = false;
+                alert(e.message || "operation failed");
+            }
+        );
+        btn.classList.remove("active");
 
-export function pause() {
-    return simple_req("/pause", "POST");
+        if(success) {
+            onsuccess();
+        }
+    });
 }
