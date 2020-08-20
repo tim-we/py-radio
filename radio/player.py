@@ -58,6 +58,8 @@ class Player:
 
     def _play(self) -> None:
         while True:
+            time.sleep(0.1)
+            
             if self._queue.empty():
                 next_clip = self._scheduler.next()
                 if isinstance(next_clip, Clip):
