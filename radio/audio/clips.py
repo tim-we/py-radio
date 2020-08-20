@@ -44,7 +44,7 @@ class AudioClip(Clip):
             name = os.path.splitext(os.path.basename(file))[0]
         super().__init__(name)
         self.file = file
-        self._loaded = Event()
+        self.loaded = Event()
         self._data: Optional[np.array] = None
         self._sr: int
 
@@ -60,8 +60,8 @@ class AudioClip(Clip):
             return
 
         # wait until MP3 file is loaded
-        if not self._loaded.is_set():
-            self._loaded.wait()
+        if not self.loaded.is_set():
+            self.loaded.wait()
         assert self._data is not None
 
         # play & free memory
@@ -88,7 +88,7 @@ class AudioClip(Clip):
             clip._data = data
             clip._sr = sr
             # send signal that the clip is loaded as .start() might be waiting
-            clip._loaded.set()
+            clip.loaded.set()
             time.sleep(0.1)
 
 
