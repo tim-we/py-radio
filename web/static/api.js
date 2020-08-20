@@ -18,6 +18,11 @@ export function now() {
 
 export function button(btn, path, method = "GET", onsuccess) {
     btn.addEventListener("click", async (e) => {
+        if(btn.classList.contains("active")) {
+            console.log("Ignoring button click because it is still active.");
+            return;
+        }
+        
         btn.classList.add("active");
         let success = true;
         await api_request(path, method).catch(
