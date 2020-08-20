@@ -82,3 +82,5 @@ class Scheduler:
             if self._queue.empty():
                 clip = self.next()
                 self._queue.put(clip)
+                if isinstance(clip, AudioClip):
+                    clip.loaded.wait()
