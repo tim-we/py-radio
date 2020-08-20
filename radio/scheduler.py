@@ -15,7 +15,7 @@ class Scheduler:
         self._other_clips: int = 0
         self._last_host_time: float = 0.0
         self.tagesschau = Tagesschau100s()
-        Thread(target=self._news_thread, daemon=True).start()
+        Thread(target=self._news_thread, name="NewsThread", daemon=True).start()
         if preload:
             Thread(target=self._prepare_next, daemon=True).start()
 

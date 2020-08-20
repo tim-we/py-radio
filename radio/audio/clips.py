@@ -47,9 +47,9 @@ class AudioClip(Clip):
         self._data: Optional[np.array] = None
         self._sr: int
 
-        # MP3 files get preloaded (read & decoded)
+        # audio files get preloaded (read & decoded)
         if AudioClip.loading_thread is None:
-            AudioClip.loading_thread = Thread(target=AudioClip._load, daemon=True)
+            AudioClip.loading_thread = Thread(target=AudioClip._load, name="LoadingThread", daemon=True)
             AudioClip.loading_thread.start()
         AudioClip._loading_queue.put(self)
 

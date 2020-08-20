@@ -77,4 +77,4 @@ def create(player: Player, library: ClipLibrary, host: str = "", port: int = 80)
         )
         print("API will be available at http://{}:{}{}/".format(host, port, api_prefix))
 
-    Thread(target=start, daemon=True).start()
+    Thread(target=start, name="ServerThread", daemon=True).start()

@@ -45,7 +45,7 @@ class Player:
 
     def start(self) -> None:
         if self._thread is None:
-            self._thread = Thread(target=self._play, daemon=False)
+            self._thread = Thread(target=self._play, name="PlayerThread", daemon=False)
             self._thread.start()
 
     def _add_to_history(self, clip: Clip) -> None:
