@@ -99,6 +99,13 @@ def create(player: Player, library: ClipLibrary, host: str = "", port: int = 80)
             "os": os.uname().sysname
         })
 
+    @flask.route(api_prefix + "/service/<string:service>", methods=["PUT"])
+    def api_service(service: str) -> Any:
+        return jsonify({
+            "status": "error",
+            "message": "Not yet implemented."
+        })
+
     def start() -> None:
         serve(
             flask,

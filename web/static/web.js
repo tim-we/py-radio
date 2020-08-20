@@ -2,8 +2,8 @@ import * as api from "./api.js"
 
 window.addEventListener("DOMContentLoaded", () => {
     api.button(document.getElementById("pause"), "/pause", "POST", update)
-
     api.button(document.getElementById("skip"), "/skip", "PUT", update);
+    api.button(document.getElementById("news"), "/service/tagesschau", "PUT", update);
 
     const current = document.getElementById("current-clip");
     const history = document.getElementById("history-clips");
