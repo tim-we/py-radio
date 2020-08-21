@@ -4,7 +4,6 @@ import random
 from threading import Thread
 from radio.audio.clips import Clip, AudioClip
 from radio.library import ClipLibrary
-from radio.services.tagesschau import Tagesschau100s
 
 
 class Scheduler:
@@ -14,8 +13,6 @@ class Scheduler:
         self._force_song = False
         self._other_clips: int = 0
         self._last_host_time: float = 0.0
-        self.tagesschau = Tagesschau100s()
-        Thread(target=self._news_thread, name="NewsThread", daemon=True).start()
         if preload:
             Thread(target=self._prepare_next, daemon=True).start()
 
@@ -52,6 +49,10 @@ class Scheduler:
         if hard:
             self._queue = Queue()
 
+    def schedule(self, clip: Clip) -> None:
+        assert clip is not None
+        self._queue.put(clip)
+
     def _host_time(self) -> bool:
         if self.library.hosts.empty():
             return False
@@ -59,24 +60,6 @@ class Scheduler:
         t: float = time.time() - self._last_host_time
         r: float = 4.0 + random.uniform(0.0, 6.0)
         return t > r
-
-    def _news_thread(self) -> None:
-        tagesschau = self.tagesschau
-        while(True):
-            # compute remaining time
-            t = time.localtime()
-            rm = max(0, 60 - t.tm_min)
-
-            # await next full hour
-            time.sleep(60*rm)
-
-            # update & schedule news
-            tagesschau.update()
-            if not self.tagesschau.latest == "":
-                self._queue.put(AudioClip(tagesschau.latest, "Tagesschau in 100s"))
-
-            # sleep 5 min to avoid immediate rescheduling
-            time.sleep(5*60)
 
     def _prepare_next(self) -> None:
         while True:

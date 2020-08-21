@@ -1,6 +1,7 @@
 from config import Config
 from radio.player import Player
 from radio.library import ClipLibrary
+from radio.extensions.tagesschau import Tagesschau100s
 from bots.tg import Telegram
 import web.server
 from util.internet import await_internet
@@ -16,6 +17,10 @@ if library.music.size() == 0:
     sys.exit("Library does not contain any music.")
 player = Player(library)
 player.start()
+
+# extensions
+tagesschau = Tagesschau100s()
+player.add_extension(tagesschau)
 
 # the following modules require internet
 await_internet()
