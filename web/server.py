@@ -7,6 +7,7 @@ from threading import Thread
 from waitress import serve
 import ifcfg
 import os
+import sys
 
 api_prefix = "/api/v1.0"
 
@@ -92,11 +93,13 @@ def create(player: Player, library: ClipLibrary, host: str = "", port: int = 80)
 
     @flask.route(api_prefix + "/sysinfo", methods=["GET"])
     def api_sysinfo() -> Any:
+        pv = sys.implementation.version
         return jsonify({
             "status": "ok",
             "cpu_count": os.cpu_count(),
             "process_id": os.getpid(),
-            "os": os.uname().sysname
+            "os": os.uname().sysname,
+            "python_version": "{}.{}".format(pv.major, pv.minor)
         })
 
     @flask.route(api_prefix + "/service/<string:service>", methods=["PUT"])
