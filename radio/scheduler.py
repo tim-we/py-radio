@@ -37,7 +37,9 @@ class Scheduler:
                 clip.hide = True
                 return clip
 
-            if self._other_clips > 2 or random.uniform(0, 1) < 0.7:
+            force_music = self.library.other.size() == 0 or self._other_clips > 2
+
+            if force_music or random.uniform(0, 1) < 0.7:
                 return AudioClip(self.library.music.next())
             else:
                 self._other_clips += 1

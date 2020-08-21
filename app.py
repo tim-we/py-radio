@@ -4,6 +4,7 @@ from radio.library import ClipLibrary
 from bots.tg import Telegram
 import web.server
 from util.internet import await_internet
+import sys
 
 # user configuration
 cfg = Config("config.json")
@@ -11,6 +12,8 @@ cfg = Config("config.json")
 # start radio
 print("Radio starting...")
 library = ClipLibrary(cfg.get("library"))
+if library.music.size() == 0:
+    sys.exit("Library does not contain any music.")
 player = Player(library)
 player.start()
 
