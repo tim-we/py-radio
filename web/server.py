@@ -102,7 +102,7 @@ def create(player: Player, library: ClipLibrary, host: str = "", port: int = 80)
             "python_version": "{}.{}".format(pv.major, pv.minor)
         })
 
-    @flask.route(api_prefix + "/extensions/all", methods=["GET"])
+    @flask.route(api_prefix + "/extensions", methods=["GET"])
     def api_extensions() -> Any:
         return jsonify({
             "status": "ok",
@@ -112,7 +112,7 @@ def create(player: Player, library: ClipLibrary, host: str = "", port: int = 80)
             ))
         })
 
-    @flask.route(api_prefix + "/extension/<string:ext>/schedule", methods=["PUT"])
+    @flask.route(api_prefix + "/extensions/<string:ext>/schedule", methods=["PUT"])
     def api_schedule_extension(ext: str) -> Any:
         return jsonify({
             "status": "error",
