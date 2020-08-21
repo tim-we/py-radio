@@ -7,6 +7,9 @@ window.addEventListener("DOMContentLoaded", async () => {
     const current = document.getElementById("current-clip");
     const history = document.getElementById("history-clips");
 
+    /**
+     * @type {string[]}
+     */
     let last_history = [];
 
     async function update() {
@@ -23,7 +26,7 @@ window.addEventListener("DOMContentLoaded", async () => {
 
         // update history section
         let history_changed = last_history.length !== info.history.length;
-        if(!history_changed && last_history > 0) {
+        if(!history_changed && last_history.length > 0) {
             let idx = last_history.length-1;
             history_changed = history_changed || last_history[idx] !== info.history[idx];
         }
