@@ -119,10 +119,12 @@ def create(player: Player, library: ClipLibrary, host: str = "", port: int = 80)
             extension: Extension = player.extensions[ext]
             clip = extension.get_clip()
             if clip is not None:
+                print("{} scheduled via API".format(extension.name))
                 player.schedule(clip)
                 if isinstance(clip, AudioClip):
                     clip.loaded.wait()
-                player.skip()
+                if not player.now() == clip:
+                    player.skip()
                 return jsonify({"status": "ok"})
             else:
                 return jsonify({
