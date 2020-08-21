@@ -16,6 +16,11 @@ export function now() {
     return api_request("/now");
 }
 
+export async function get_extensions() {
+    let obj = await api_request("/extensions", "GET");
+    return obj.extensions;
+}
+
 export function button(btn, path, method = "GET", onsuccess) {
     btn.addEventListener("click", async (e) => {
         if(btn.classList.contains("active")) {

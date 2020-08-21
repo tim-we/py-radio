@@ -1,6 +1,7 @@
 from radio.player import Player
 from radio.library import ClipLibrary
 from radio.audio.clips import AudioClip, Pause, describe
+from radio.extensions.extension import Extension
 from flask import Flask, jsonify, render_template, send_from_directory, request
 from typing import Any
 from threading import Thread
@@ -102,12 +103,35 @@ def create(player: Player, library: ClipLibrary, host: str = "", port: int = 80)
             "python_version": "{}.{}".format(pv.major, pv.minor)
         })
 
-    @flask.route(api_prefix + "/service/<string:service>", methods=["PUT"])
-    def api_service(service: str) -> Any:
+    @flask.route(api_prefix + "/extensions", methods=["GET"])
+    def api_extensions() -> Any:
         return jsonify({
-            "status": "error",
-            "message": "Not yet implemented."
+            "status": "ok",
+            "extensions": list(map(
+                lambda e: {"name": e[1].name, "command": e[0]},
+                player.extensions.items()
+            ))
         })
+
+    @flask.route(api_prefix + "/extensions/<string:ext>/schedule", methods=["PUT"])
+    def api_schedule_extension(ext: str) -> Any:
+        if ext in player.extensions:
+            extension: Extension = player.extensions[ext]
+            clip = extension.get_clip()
+            if clip is not None:
+                player.schedule(clip)
+                player.skip()
+                return jsonify({"status": "ok"})
+            else:
+                return jsonify({
+                    "status": "error",
+                    "message": "{} did not provide a clip.".format(extension.name)
+                })
+        else:
+            return jsonify({
+                "status": "error",
+                "message": "No extension for this command."
+            })
 
     def start() -> None:
         serve(

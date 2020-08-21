@@ -1,9 +1,8 @@
 import * as api from "./api.js"
 
-window.addEventListener("DOMContentLoaded", () => {
+window.addEventListener("DOMContentLoaded", async () => {
     api.button(document.getElementById("pause"), "/pause", "POST", update)
     api.button(document.getElementById("skip"), "/skip", "PUT", update);
-    api.button(document.getElementById("news"), "/service/tagesschau", "PUT", update);
 
     const current = document.getElementById("current-clip");
     const history = document.getElementById("history-clips");
@@ -48,4 +47,14 @@ window.addEventListener("DOMContentLoaded", () => {
 
     update();
     window.setInterval(update, 3141);
+
+    const extensions = await api.get_extensions();
+
+    for(const ext of extensions) {
+        let btn = document.createElement("button");
+        btn.title = ext.name;
+        btn.innerText = ext.command;
+        document.getElementById("controls").prepend(btn);
+        api.button(btn, `/extensions/${ext.command}/schedule`, "PUT", update);
+    }
 });
