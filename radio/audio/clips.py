@@ -77,11 +77,11 @@ class AudioClip(Clip):
         super().stop()
         time.sleep(0.1)
 
-    @staticmethod
-    def _load() -> None:
+    @classmethod
+    def _load(cls) -> None:
         while True:
             # (pre)load next audio clip
-            clip = AudioClip._loading_queue.get()
+            clip = cls._loading_queue.get()
             data, sr = ffmpeg_load_audio(clip.file)
             clip.duration = len(data) / sr  # type: ignore
             # store data
