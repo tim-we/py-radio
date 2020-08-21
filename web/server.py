@@ -4,7 +4,7 @@ from radio.audio.clips import AudioClip, Pause, describe
 from radio.extensions.extension import Extension
 from flask import Flask, jsonify, render_template, send_from_directory, request
 from typing import Any
-from threading import Thread
+from threading import Thread, active_count
 from waitress import serve
 import ifcfg
 import os
@@ -100,7 +100,8 @@ def create(player: Player, library: ClipLibrary, host: str = "", port: int = 80)
             "cpu_count": os.cpu_count(),
             "process_id": os.getpid(),
             "os": os.uname().sysname,
-            "python_version": "{}.{}".format(pv.major, pv.minor)
+            "python_version": "{}.{}".format(pv.major, pv.minor),
+            "threads": active_count()
         })
 
     @flask.route(api_prefix + "/extensions", methods=["GET"])
@@ -136,6 +137,16 @@ def create(player: Player, library: ClipLibrary, host: str = "", port: int = 80)
                 "status": "error",
                 "message": "No extension for this command."
             })
+
+    @flask.route(api_prefix + "/library/update", methods=["PUT"])
+    def api_library_update() -> Any:
+        thread = Thread(target=library.update, name="APILibUpdateThread")
+        thread.start()
+        thread.join(1.0)
+        return jsonify({
+            "status": "ok",
+            "update_status": "updating" if thread.is_alive() else "completed"
+        })
 
     def start() -> None:
         serve(
