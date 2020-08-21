@@ -80,5 +80,6 @@ class Player:
             self._current = None
 
     def add_extension(self, extension: Extension) -> None:
+        self.extensions.append(extension)
         run_extension(self._scheduler, extension)
         print("Extension: '{}' is now active.".format(extension.name))
