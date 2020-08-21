@@ -107,8 +107,8 @@ def create(player: Player, library: ClipLibrary, host: str = "", port: int = 80)
         return jsonify({
             "status": "ok",
             "extensions": list(map(
-                lambda e: {"name": e.name, "command": e.command},
-                player.extensions
+                lambda e: {"name": e[1].name, "command": e[0]},
+                player.extensions.items()
             ))
         })
 

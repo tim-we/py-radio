@@ -5,7 +5,7 @@ from radio.audio.clips import Clip
 from radio.scheduler import Scheduler
 from radio.extensions.extension import Extension, run_extension
 from radio.library import ClipLibrary
-from typing import Optional, List
+from typing import Optional, List, Dict
 
 HISTORY_LEN: int = 7
 
@@ -17,7 +17,7 @@ class Player:
         self._history: List[Clip] = []
         self._current: Optional[Clip] = None
         self._thread: Optional[Thread] = None
-        self.extensions: List[Extension] = []
+        self.extensions: Dict[str, Extension] = {}
 
     def get_history(self, num: int = 0, format_title: str = '{}', format_skip: str = ' (skipped)') -> List[str]:
         """Returns a list of strings, each representing a clip."""
@@ -80,6 +80,7 @@ class Player:
             self._current = None
 
     def add_extension(self, extension: Extension) -> None:
-        self.extensions.append(extension)
         run_extension(self._scheduler, extension)
+        if extension.command is not None:
+            self.extensions[extension.command] = extension
         print("Extension: '{}' is now active.".format(extension.name))

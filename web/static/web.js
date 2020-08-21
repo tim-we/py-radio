@@ -51,12 +51,10 @@ window.addEventListener("DOMContentLoaded", async () => {
     const extensions = await api.get_extensions();
 
     for(const ext of extensions) {
-        if(ext.command) {
-            let btn = document.createElement("button");
-            btn.title = ext.name;
-            btn.innerText = ext.command;
-            document.getElementById("controls").prepend(btn);
-            api.button(btn, `/extensions/${ext.command}/schedule`, "PUT", update);
-        }
+        let btn = document.createElement("button");
+        btn.title = ext.name;
+        btn.innerText = ext.command;
+        document.getElementById("controls").prepend(btn);
+        api.button(btn, `/extensions/${ext.command}/schedule`, "PUT", update);
     }
 });
