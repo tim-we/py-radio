@@ -17,18 +17,21 @@ class ClipLibrary:
         self.folder = folder
         print(" ->", self.music.size() + self.night.size(), "songs")
         print(" ->", self.hosts.size(), "host clips")
-        Thread(target=self._update_thread, name="LibUpdateThread", daemon=True)
+        Thread(target=self._update_thread, name="LibUpdateThread", daemon=True).start()
+
+    def update(self) -> None:
+        print("Updating library...")
+        self.hosts.scan()
+        self.music.scan()
+        self.night.scan()
+        self.other.scan()
 
     def _update_thread(self) -> None:
         while(True):
             # wait 30min
             time.sleep(30 * 60)
             # update library
-            print("Updating library...")
-            self.hosts.scan()
-            self.music.scan()
-            self.night.scan()
-            self.other.scan()
+            self.update()
 
     def search_clips(self, search: str, short_path: bool = False) -> List[str]:
         # get all paths matching the search term
