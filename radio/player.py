@@ -1,7 +1,7 @@
 from threading import Thread
 import time
 from queue import Queue, LifoQueue
-from radio.audio.clips import Clip
+from radio.audio import Clip
 from radio.scheduler import Scheduler
 from radio.extensions import Extension, run_extension
 import radio.library

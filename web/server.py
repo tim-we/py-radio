@@ -1,7 +1,7 @@
 import radio.player
 import radio.library
 from radio.audio.clips import AudioClip, Pause, describe
-from radio.extensions.extension import Extension
+from radio.extensions import Extension
 from flask import Flask, jsonify, render_template, send_from_directory, request
 from typing import Any
 from threading import Thread, active_count

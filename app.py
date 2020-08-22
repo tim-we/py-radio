@@ -1,6 +1,5 @@
 from config import Config
-from radio.player import Player
-from radio.library import ClipLibrary
+from radio import Player, ClipLibrary
 from radio.extensions import add_extensions
 from bots.tg import Telegram
 import web.server

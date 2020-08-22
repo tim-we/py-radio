@@ -2,7 +2,7 @@ from queue import Queue
 import time
 import random
 from threading import Thread
-from radio.audio.clips import Clip, AudioClip
+from radio.audio import Clip, AudioClip
 import radio.library
 
 
