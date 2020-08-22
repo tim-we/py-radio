@@ -2,7 +2,7 @@ import radio.player
 import radio.library
 from radio.audio import AudioClip, Pause
 from radio.extensions import Extension
-from flask import Flask, jsonify, render_template, send_from_directory, request
+from flask import Flask, jsonify, send_file, request
 from typing import Any
 from threading import Thread, active_count
 from waitress import serve
@@ -18,18 +18,18 @@ def create(
     library: 'radio.library.ClipLibrary',
     port: int = 80
 ) -> None:
-    flask = Flask(__name__.split('.')[0])
+    flask = Flask(
+        __name__.split('.')[0],
+        static_url_path="/static",
+        static_folder="static"
+    )
 
     host = ifcfg.default_interface()["inet"]
 
     # -------------- WEBSITE --------------
     @flask.route("/", methods=["GET"])
     def web_main() -> Any:
-        return render_template("web.html")
-
-    @flask.route("/static/<path:path>")
-    def web_static(path: Any) -> Any:
-        return send_from_directory("static", path)
+        return send_file("static/web.html")
 
     # ---------------- API ----------------
     @flask.route(api_prefix + "/now", methods=["GET"])
