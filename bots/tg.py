@@ -1,7 +1,7 @@
 from telegram.ext import Updater, CommandHandler, MessageHandler, Filters
 from telegram.parsemode import ParseMode
-from radio.player import Player
-from radio.library import ClipLibrary
+import radio.player
+import radio.library
 from radio.audio.clips import AudioClip, describe
 import os
 from typing import Any
@@ -11,7 +11,12 @@ from pytube import YouTube
 
 
 class Telegram:
-    def __init__(self, token: str, player: Player, library: ClipLibrary):
+    def __init__(
+        self,
+        token: str,
+        player: 'radio.player.Player',
+        library: 'radio.library.ClipLibrary'
+    ):
         self._player = player
         self._library = library
         self._updater = Updater(token=token, use_context=True)

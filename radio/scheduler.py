@@ -2,12 +2,12 @@ from queue import Queue
 import time
 import random
 from threading import Thread
-from radio.audio.clips import Clip, AudioClip
-from radio.library import ClipLibrary
+from radio.audio import Clip, AudioClip
+import radio.library
 
 
 class Scheduler:
-    def __init__(self, library: ClipLibrary, preload: bool = True):
+    def __init__(self, library: 'radio.library.ClipLibrary', preload: bool = True):
         self.library = library
         self._queue: Queue = Queue()
         self._force_song = False

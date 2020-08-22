@@ -4,7 +4,7 @@ import tempfile
 import os
 import time
 from radio.extensions.extension import Extension
-from radio.audio.clips import Clip, AudioClip
+from radio.audio import Clip, AudioClip
 from typing import Optional
 
 PODCAST_URL = "http://www.tagesschau.de" \
