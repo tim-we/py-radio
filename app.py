@@ -1,7 +1,7 @@
 from config import Config
 from radio.player import Player
 from radio.library import ClipLibrary
-from radio.extensions.tagesschau import Tagesschau100s
+from radio.extensions import add_extensions
 from bots.tg import Telegram
 import web.server
 from util.internet import await_internet
@@ -19,8 +19,7 @@ player = Player(library)
 player.start()
 
 # extensions
-tagesschau = Tagesschau100s()
-player.add_extension(tagesschau)
+add_extensions(player, ["tagesschau"])
 
 # the following modules require internet
 await_internet()

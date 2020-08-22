@@ -3,15 +3,15 @@ import time
 from queue import Queue, LifoQueue
 from radio.audio.clips import Clip
 from radio.scheduler import Scheduler
-from radio.extensions.extension import Extension, run_extension
-from radio.library import ClipLibrary
+from radio.extensions import Extension, run_extension
+import radio.library
 from typing import Optional, List, Dict
 
 HISTORY_LEN: int = 7
 
 
 class Player:
-    def __init__(self, library: ClipLibrary):
+    def __init__(self, library: 'radio.library.ClipLibrary'):
         self._queue: Queue = LifoQueue()
         self._scheduler = Scheduler(library)
         self._history: List[Clip] = []

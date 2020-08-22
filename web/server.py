@@ -1,5 +1,5 @@
-from radio.player import Player
-from radio.library import ClipLibrary
+import radio.player
+import radio.library
 from radio.audio.clips import AudioClip, Pause, describe
 from radio.extensions.extension import Extension
 from flask import Flask, jsonify, render_template, send_from_directory, request
@@ -13,11 +13,14 @@ import sys
 api_prefix = "/api/v1.0"
 
 
-def create(player: Player, library: ClipLibrary, host: str = "", port: int = 80) -> None:
+def create(
+    player: 'radio.player.Player',
+    library: 'radio.library.ClipLibrary',
+    port: int = 80
+) -> None:
     flask = Flask(__name__.split('.')[0])
 
-    if host == "":
-        host = ifcfg.default_interface()["inet"]
+    host = ifcfg.default_interface()["inet"]
 
     # -------------- WEBSITE --------------
     @flask.route("/", methods=["GET"])
