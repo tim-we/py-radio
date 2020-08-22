@@ -38,12 +38,20 @@ class Player:
         self._queue.put(clip)
 
     def skip(self) -> None:
-        if self._current is not None:
-            msg = "Skipped {}".format(self._current)
-            self._current.stop()
+        clip = self._current
+        if clip is not None:
+            msg = "Skipped {}".format(clip)
+            clip.stop()
             print(msg)
         else:
             print("Skip failed: Nothing to skip.")
+
+    def repeat(self) -> None:
+        clip = self._current
+        if clip is not None:
+            self.schedule(clip.copy())
+        else:
+            print("Nothing to repeat.")
 
     def start(self) -> None:
         if self._thread is None:

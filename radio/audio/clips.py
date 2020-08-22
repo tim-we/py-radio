@@ -1,6 +1,6 @@
-from abc import ABC
+from abc import ABC, abstractmethod
 from radio.audio.reader import ffmpeg_load_audio
-import sounddevice
+import sounddevice as sd
 import os.path
 from threading import Thread, Event
 import time
@@ -33,9 +33,12 @@ class Clip(ABC):
     def __str__(self) -> str:
         return self.name
 
+    @abstractmethod
+    def copy(self) -> 'Clip':
+        pass
+
 
 class AudioClip(Clip):
-    _dev = sounddevice
     _loading_queue: Queue = Queue()
     loading_thread: Optional[Thread] = None
 
@@ -65,7 +68,7 @@ class AudioClip(Clip):
         assert self._data is not None
 
         # play & free memory
-        AudioClip._dev.play(self._data, self._sr)
+        sd.play(self._data, self._sr)
         self._data = None
 
         # block thread until completed (or aborted)
@@ -73,9 +76,12 @@ class AudioClip(Clip):
         self._completed.set()
 
     def stop(self) -> None:
-        AudioClip._dev.stop()
+        sd.stop()
         super().stop()
         time.sleep(0.1)
+
+    def copy(self) -> Clip:
+        return AudioClip(self.file, self.name)
 
     @classmethod
     def _load(cls) -> None:
@@ -101,3 +107,6 @@ class Pause(Clip):
         super().start()
         self._completed.wait(self.duration * 60)
         self._completed.set()
+
+    def copy(self) -> Clip:
+        return Pause(self.duration)

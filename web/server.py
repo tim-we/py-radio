@@ -89,6 +89,11 @@ def create(
         player.skip()
         return jsonify({"status": "ok"})
 
+    @flask.route(api_prefix + "/repeat", methods=["PUT"])
+    def api_repeat() -> Any:
+        player.repeat()
+        return jsonify({"status": "ok"})
+
     @flask.route(api_prefix + "/pause", methods=["POST", "PUT"])
     def api_pause() -> Any:
         if not isinstance(player.now(), Pause):
