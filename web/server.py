@@ -1,6 +1,6 @@
 import radio.player
 import radio.library
-from radio.audio.clips import AudioClip, Pause, describe
+from radio.audio import AudioClip, Pause
 from radio.extensions import Extension
 from flask import Flask, jsonify, render_template, send_from_directory, request
 from typing import Any
@@ -34,9 +34,10 @@ def create(
     # ---------------- API ----------------
     @flask.route(api_prefix + "/now", methods=["GET"])
     def api_now() -> Any:
+        now = player.now()
         return jsonify({
             "status": "ok",
-            "current": describe(player.now()),
+            "current": "-" if now is None else now.__str__(),
             "history": player.get_history(),
             "library": {
                 "music": library.music.size() + library.night.size(),

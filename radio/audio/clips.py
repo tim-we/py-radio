@@ -101,10 +101,3 @@ class Pause(Clip):
         super().start()
         self._completed.wait(self.duration * 60)
         self._completed.set()
-
-
-def describe(clip: Optional[Clip]) -> str:
-    if clip is None:
-        return "silence"
-    else:
-        return clip.__str__()

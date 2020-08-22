@@ -2,7 +2,7 @@ from telegram.ext import Updater, CommandHandler, MessageHandler, Filters
 from telegram.parsemode import ParseMode
 import radio.player
 import radio.library
-from radio.audio.clips import AudioClip, describe
+from radio.audio import AudioClip
 import os
 from typing import Any
 from re import findall
@@ -88,9 +88,12 @@ class Telegram:
             context.bot.send_message(chat_id=update.effective_chat.id, text=history, parse_mode=ParseMode.MARKDOWN)
 
     def _skip(self, update: Any, context: Any) -> None:
-        msg = "Skipping {}".format(describe(self._player.now()))
-        context.bot.send_message(chat_id=update.effective_chat.id, text=msg)
-        self._player.skip()
+        if self._player.now() is not None:
+            msg = "Skipped {}".format(self._player.now())
+            self._player.skip()
+            context.bot.send_message(chat_id=update.effective_chat.id, text=msg)
+        else:
+            context.bot.send_message(chat_id=update.effective_chat.id, text="Nothing to skip.")
 
     @staticmethod
     def _unknown(update: Any, context: Any) -> None:
