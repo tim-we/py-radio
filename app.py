@@ -1,17 +1,16 @@
-from config import Config
 from radio import Player, ClipLibrary
 from radio.extensions import add_extensions
 from bots.tg import Telegram
 import web.server
-from util.internet import await_internet
+from util import await_internet, JSONFile
 import sys
 
 # user configuration
-cfg = Config("config.json")
+cfg = JSONFile("config.json")
 
 # start radio
 print("Radio starting...")
-library = ClipLibrary(cfg.get("library"))
+library = ClipLibrary(cfg.get("library", "test_library"))
 if library.music.size() == 0:
     sys.exit("Library does not contain any music.")
 player = Player(library)
@@ -24,13 +23,13 @@ add_extensions(player, ["tagesschau"])
 await_internet()
 
 # start bots & web server
-if cfg.get("web.enabled"):
+if cfg.get("web.enabled", False):
     web.server.create(
         player=player,
         library=library,
-        port=cfg.get("web.port")
+        port=cfg.get("web.port", 6969)
     )
 
-if cfg.get("telegram.enabled"):
-    telegram = Telegram(cfg.get("telegram.token"), player, library)
+if cfg.get("telegram.enabled", False):
+    telegram = Telegram(cfg.get("telegram.token", "", fail=True), player, library)
     telegram.start()
