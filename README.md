@@ -1,6 +1,6 @@
 # py-radio
 
-![static analysis](https://github.com/tim-we/py-radio/workflows/static%20analysis/badge.svg)
+![static analysis](https://github.com/tim-we/py-radio/workflows/static%20analysis/badge.svg) ![tests](https://github.com/tim-we/py-radio/workflows/tests/badge.svg)
 
 ## Install
 
