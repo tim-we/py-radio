@@ -1,4 +1,4 @@
-name: static analysis
+name: tests
 
 on:
   push:
@@ -7,7 +7,7 @@ on:
     branches: [ master ]
 
 jobs:
-  syntax-check:
+  unit-tests:
     runs-on: ubuntu-latest
     
     steps:
