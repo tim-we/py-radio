@@ -1,5 +1,5 @@
 from abc import ABC, abstractmethod
-from radio.audio.reader import ffmpeg_load_audio
+from radio.audio import ffmpeg_load_audio
 import sounddevice as sd
 import os.path
 from threading import Thread, Event
@@ -52,7 +52,7 @@ class AudioClip(Clip):
         self._sr: int
 
         # audio files get preloaded (read & decoded)
-        if AudioClip.loading_thread is None:
+        if AudioClip.loading_thread is None or (not AudioClip.loading_thread.is_alive()):
             AudioClip.loading_thread = Thread(target=AudioClip._load, name="LoadingThread", daemon=True)
             AudioClip.loading_thread.start()
         AudioClip._loading_queue.put(self)
