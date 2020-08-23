@@ -13,12 +13,15 @@ class JSONFile:
         json_string = ""
 
         if file_content == "":
+            assert file != ""
             if os.path.exists(file):
                 with open(file, "r") as json_file:
                     json_string = json_file.read()
                     self.file = file
             else:
                 print("Warning:", file, "not found.")
+        else:
+            json_string = file_content
 
         if not json_string == "":
             self._data = json.loads(json_string)
