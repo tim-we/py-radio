@@ -12,12 +12,15 @@ console.log("API path", API_PATH);
  * @param {string} path 
  * @param {HTTPMethod} method 
  */
-export async function api_request(path, method = "GET") {
+export async function api_request(path, method = "GET", data = null) {
     let init = {
         method: method,
         cache: "no-store",
         follow: "error"
     };
+    if(data) {
+        init.body = data;
+    }
     let response = await fetch(API_PATH + path, init);
     let obj = await response.json();
     return obj.status === "ok" ? Promise.resolve(obj) : Promise.reject(obj);
@@ -46,6 +49,31 @@ export function now() {
 export async function get_extensions() {
     let obj = await api_request("/extensions", "GET");
     return obj.extensions;
+}
+
+/**
+ * Searches the song library.
+ * @param {string} filter
+ * @returns {Promise<string[]>} a list of songs
+ */
+export async function search(filter) {
+    filter = filter.trim();
+    if(filter == "") {
+        return Promise.resolve([]);
+    }
+    let obj = await api_request("/search/" + encodeURIComponent(filter), "GET");
+    return obj.results;
+}
+
+/**
+ * Add a clip to the player queue.
+ * @param {string} clip
+ * @returns {Promise<void>}
+ */
+export async function schedule(clip) {
+    let form = new FormData();
+    form.append("file", clip);
+    return api_request("/schedule", "POST", new URLSearchParams(form));
 }
 
 /**

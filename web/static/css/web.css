@@ -84,6 +84,7 @@ body {
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
+    margin-bottom: -6px;
 }
 
 #controls button {
@@ -92,8 +93,10 @@ body {
     box-sizing: border-box;
     height: 42px;
     min-width: 42px;
-    flex-basis: 75px;
+    max-width: 150px;
+    flex-basis: max-content;
     flex-grow: 1;
+    margin-bottom: 6px;
 
     font-size: 20px;
     color: #e6e8ea;
@@ -141,4 +144,94 @@ body {
     font-size: 14px;
     text-align: center;
     background-color: var(--bg-color);
+}
+
+#song-list-container {
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    right: 0px;
+    bottom: 0px;
+    background-color: rgba(16,16,16,0.42);
+    display: none;
+}
+
+#song-list-container.show {
+    display: grid;
+    place-items: center;
+}
+
+#song-list-modal {
+    width: 650px;
+    height: 800px;
+    max-width: 100vw;
+    max-height: 100vh;
+    background-color: white;
+    display: grid;
+    grid-template-rows: auto 1fr;
+    box-shadow: 0px 0px 20px 1px rgba(0,0,0,0.25);
+}
+
+#song-list-controls {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    border-bottom: 2px solid rgb(16,16,16);
+}
+
+#song-filter {
+    box-sizing: border-box;
+    height: 42px;
+    border: none;
+    padding-left: 10px;
+}
+
+#song-list-close {
+    width: 42px;
+    height: 42px;
+    box-sizing: border-box;
+    background-color: rgb(182, 182, 182);
+    background-image: url("../img/close.svg");
+    border: none;
+    cursor: pointer;
+}
+
+#song-list {
+    padding: 5px 0px;
+    overflow-y: scroll;
+}
+
+#song-list .song {
+    font-size: 1.2em;
+    padding: 5px 5px;
+}
+
+#song-list .song:nth-of-type(even) {
+    background-color: rgb(240,240,240);
+}
+
+#song-list .song .folder {
+    color: rgb(64,64,64);
+    font-size: 0.8em;
+    margin-right: 2px;
+}
+
+#song-list .song button.add {
+    box-sizing: border-box;
+    width: 25px;
+    height: 25px;
+    border-radius: 50%;
+    border: none;
+    background-color: #2790ec;
+    background-image: url("../img/add.svg");
+    background-repeat: no-repeat;
+    background-size: contain;
+    background-position: center;
+    cursor: pointer;
+    margin-left: 8px;
+    vertical-align: top;
+    opacity: 0.6;
+}
+
+#song-list .song:hover button.add {
+    opacity: 1;
 }

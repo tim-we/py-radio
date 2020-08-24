@@ -1,9 +1,12 @@
-import * as api from "./api.js"
+import * as api from "./api.js";
+import * as list from "./song-list.js";
 
 window.addEventListener("DOMContentLoaded", async () => {
     api.button(document.getElementById("pause"), "/pause", "POST", update)
     api.button(document.getElementById("skip"), "/skip", "PUT", update);
     api.button(document.getElementById("repeat"), "/repeat", "PUT", update);
+    
+    document.getElementById("song-list-button").addEventListener("click", list.open);
 
     const current = document.getElementById("current-clip");
     const history = document.getElementById("history-clips");
