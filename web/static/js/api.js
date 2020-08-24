@@ -12,7 +12,7 @@ console.log("API path", API_PATH);
  * @param {string} path 
  * @param {HTTPMethod} method 
  */
-export async function api_request(path, method = "GET") {
+export async function api_request(path, method = "GET", data = {}) {
     let init = {
         method: method,
         cache: "no-store",
@@ -46,6 +46,20 @@ export function now() {
 export async function get_extensions() {
     let obj = await api_request("/extensions", "GET");
     return obj.extensions;
+}
+
+/**
+ * Searches the song library.
+ * @param {string} filter
+ * @returns {Promise<string[]>} a list of songs
+ */
+export async function search(filter) {
+    filter = filter.trim();
+    if(filter == "") {
+        return Promise.resolve([]);
+    }
+    let obj = await api_request("/search/" + encodeURIComponent(filter), "GET");
+    return obj.results;
 }
 
 /**
