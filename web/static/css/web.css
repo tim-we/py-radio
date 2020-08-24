@@ -10,18 +10,18 @@ div {
     padding: 0px;
 }
 
+body {
+    display: grid;
+    grid-template-rows: auto 1fr auto;
+}
+
 #header {
-    position: absolute;
-    top: 0px;
-    left: 0px;
-    right: 0px;
-    height: 100px;
+    display: grid;
+    place-items: center;
+    height: 80px;
 
     background-image: linear-gradient(#1e415e 10%,#2b5b84 90%);
     color: white;
-    
-    text-align: center;
-    line-height: 100px;
 }
 
 #header h1 {
@@ -29,21 +29,11 @@ div {
     padding: 0px;
 }
 
-#content {
-    position: absolute;
-    top: 100px;
-    left: 0px;
-    right: 0px;
-}
-
-.section {
-    width: 90%;
-    width: calc(100% - 20px);
+#content > div {
+    box-sizing: border-box;
+    width: 100%;
     margin-top: 10px;
-    padding-left: 10px;
-    padding-right: 10px;
-    padding-top: 5px;
-    padding-bottom: 5px;
+    padding: 5px 10px;
 }
 
 #now {
@@ -131,9 +121,10 @@ div {
     bottom: 0px;
     left: 0px;
     right: 0px;
-    background-image: var(--img);
+    background: var(--img);
     background-position: center;
     background-repeat: no-repeat;
+    background-size: contain;
     opacity: 0.9;
 }
 
