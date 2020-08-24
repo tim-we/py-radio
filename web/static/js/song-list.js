@@ -65,10 +65,20 @@ function song_to_div(song) {
         div.appendChild(folder_span);
     }
     
+    let filename = compontents[compontents.length - 1];
     let file_span = document.createElement("span");
-    file_span.innerText = compontents[compontents.length - 1];
+    file_span.innerText = filename
     file_span.classList.add("file");
     div.appendChild(file_span);
+
+    let add_button = document.createElement("button");
+    add_button.classList.add("add");
+    add_button.addEventListener("click", async () => {
+        await api.schedule(song);
+        alert(filename + " added to queue.");
+    });
+    add_button.title = "add to queue";
+    div.appendChild(add_button);
 
     return div;
 }

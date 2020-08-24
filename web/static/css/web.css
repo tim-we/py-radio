@@ -214,3 +214,24 @@ body {
     font-size: 0.8em;
     margin-right: 2px;
 }
+
+#song-list .song button.add {
+    box-sizing: border-box;
+    width: 25px;
+    height: 25px;
+    border-radius: 50%;
+    border: none;
+    background-color: #2790ec;
+    background-image: url("../img/add.svg");
+    background-repeat: no-repeat;
+    background-size: contain;
+    background-position: center;
+    cursor: pointer;
+    margin-left: 8px;
+    vertical-align: top;
+    opacity: 0.6;
+}
+
+#song-list .song:hover button.add {
+    opacity: 1;
+}
