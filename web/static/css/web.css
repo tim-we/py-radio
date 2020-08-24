@@ -53,6 +53,8 @@ body {
 #now > #current-clip {
     color: rgb(64,64,64);
     text-align: center;
+    font-size: 1.2em;
+    margin-top: 3px;
 }
 
 #history {
