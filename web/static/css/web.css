@@ -121,7 +121,7 @@ body {
     bottom: 0px;
     left: 0px;
     right: 0px;
-    background-image: var(--img);
+    background: var(--img);
     background-position: center;
     background-repeat: no-repeat;
     background-size: contain;
