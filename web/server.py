@@ -157,11 +157,6 @@ def create(
             "update_status": "updating" if thread.is_alive() else "completed"
         })
 
-    @flask.after_request
-    def add_headers(response) -> Any:
-        response.headers["Cache-Control"] = "no-store"
-        return response
-
     def start() -> None:
         serve(
             flask,
