@@ -84,6 +84,7 @@ body {
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
+    margin-bottom: -6px;
 }
 
 #controls button {
@@ -92,8 +93,10 @@ body {
     box-sizing: border-box;
     height: 42px;
     min-width: 42px;
-    flex-basis: 75px;
+    max-width: 150px;
+    flex-basis: max-content;
     flex-grow: 1;
+    margin-bottom: 6px;
 
     font-size: 20px;
     color: #e6e8ea;
