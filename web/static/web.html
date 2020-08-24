@@ -4,8 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>py-radio web interface</title>
-    <link rel="stylesheet" href="static/web.css">
-    <script type="module" src="static/web.js"></script>
+    <link rel="stylesheet" href="static/css/web.css">
+    <script type="module" src="static/js/web.js"></script>
 </head>
 <body>
     <div id="header">
@@ -17,19 +17,19 @@
             <div id="current-clip">-</div>
         </div>
         <div id="controls" class="section">
-            <button id="pause" title="toggle pause" class="img" style="--img:url('img/pause.svg')"></button>
-            <button id="repeat" title="repeat current clip" class="img" style="--img:url('img/repeat.svg')"></button>
-            <button id="skip" title="skip the current clip" class="img" style="--img:url('img/skip.svg')"></button>
+            <button id="pause"  title="toggle pause"          class="img" style="--img:url('../img/pause.svg')" ></button>
+            <button id="repeat" title="repeat current clip"   class="img" style="--img:url('../img/repeat.svg')"></button>
+            <button id="skip"   title="skip the current clip" class="img" style="--img:url('../img/skip.svg')"  ></button>
         </div>
         <div id="history" class="section">
             <div class="title">Recent history:</div>
             <div id="history-clips"></div>
         </div>
         <div id="stats" class="section"></div>
-        <div id="about" class="section">
-            The code for this project is
-            <a href="https://github.com/tim-we/py-radio">available on GitHub</a>.
-        </div>
+    </div>
+    <div id="about" class="section">
+        The code for this project is
+        <a href="https://github.com/tim-we/py-radio">available on GitHub</a>.
     </div>
 </body>
 </html>

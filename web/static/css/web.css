@@ -10,30 +10,23 @@ div {
     padding: 0px;
 }
 
+body {
+    display: grid;
+    grid-template-rows: auto 1fr auto;
+}
+
 #header {
-    position: absolute;
-    top: 0px;
-    left: 0px;
-    right: 0px;
-    height: 100px;
+    display: grid;
+    place-items: center;
+    height: 80px;
 
     background-image: linear-gradient(#1e415e 10%,#2b5b84 90%);
     color: white;
-    
-    text-align: center;
-    line-height: 100px;
 }
 
 #header h1 {
     margin: 0px;
     padding: 0px;
-}
-
-#content {
-    position: absolute;
-    top: 100px;
-    left: 0px;
-    right: 0px;
 }
 
 .section {
