@@ -56,38 +56,48 @@ function song_to_div(song) {
     let div = document.createElement("div");
     div.classList.add("song");
 
-    let compontents = song.split("/");
-    let folder = compontents.slice(0, compontents.length-1).join("/");
-    if(folder.length > 0) {
-        let folder_span = document.createElement("span");
-        folder_span.innerText = folder + "/";
-        folder_span.classList.add("folder");
-        div.appendChild(folder_span);
+    let main = document.createElement("div");
+    main.classList.add("main");
+    div.appendChild(main);
+    {
+        let compontents = song.split("/");
+        let folder = compontents.slice(0, compontents.length-1).join("/");
+        if(folder.length > 0) {
+            let folder_span = document.createElement("span");
+            folder_span.innerText = folder + "/";
+            folder_span.classList.add("folder");
+            main.appendChild(folder_span);
+        }
+        
+        let filename = compontents[compontents.length - 1];
+        let file_span = document.createElement("span");
+        file_span.innerText = filename
+        file_span.classList.add("file");
+        main.appendChild(file_span);
     }
     
-    let filename = compontents[compontents.length - 1];
-    let file_span = document.createElement("span");
-    file_span.innerText = filename
-    file_span.classList.add("file");
-    div.appendChild(file_span);
+    let buttons = document.createElement("div");
+    buttons.classList.add("buttons");
+    div.appendChild(buttons);
+    {
+        let add_button = document.createElement("a");
+        add_button.classList.add("add");
+        add_button.addEventListener("click", async (e) => {
+            e.preventDefault();
+            await api.schedule(song);
+            alert(filename + " added to queue.");
+        });
+        add_button.href = "#";
+        add_button.textContent = "add to queue";
+        buttons.appendChild(add_button);
 
-    // buttons
-    let add_button = document.createElement("button");
-    add_button.classList.add("add");
-    add_button.addEventListener("click", async () => {
-        await api.schedule(song);
-        alert(filename + " added to queue.");
-    });
-    add_button.title = "add to queue";
-    div.appendChild(add_button);
-
-    let download = document.createElement("button");
-    download.classList.add("download");
-    download.title = "download";
-    download.addEventListener("click", () => {
-        window.open(api.get_download_url(song), "_blank");
-    });
-    div.appendChild(download);
+        let download_button = document.createElement("a");
+        download_button.classList.add("download");
+        download_button.textContent = "download";
+        download_button.href = api.get_download_url(song);
+        download_button.download = download_button.href;
+        buttons.appendChild(download_button);
+    }
 
     return div;
 }
