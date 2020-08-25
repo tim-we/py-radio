@@ -11,6 +11,7 @@ import os
 import sys
 
 api_prefix = "/api/v1.0"
+MAX_SEARCH_RESULTS = 50
 
 
 def create(
@@ -46,22 +47,32 @@ def create(
             }
         })
 
-    @flask.route(api_prefix + "/search/<string:search>", methods=["GET"])
-    def api_search(search: str) -> Any:
-        search = search.strip()[0:42]
-        if len(search) == 0:
+    @flask.route(api_prefix + "/library/search", methods=["GET"])
+    def api_search() -> Any:
+        query: str = request.args.get("query", "", type=str).strip()[0:42]
+        if len(query) == 0:
             return jsonify({
                 "status": "error",
-                "message": "Invalid search term."
+                "message": "Invalid query."
             })
         else:
-            results = library.search_clips(search, short_path=True)
+            results = library.search_clips(query, short_path=True)
             return jsonify({
                 "status": "ok",
-                "search": search,
-                "results": results[0:100],
-                "clipped": len(results) > 100
+                "query": query,
+                "results": results[0:MAX_SEARCH_RESULTS],
+                "num_all_results": len(results)
             })
+
+    @flask.route(api_prefix + "/library/update", methods=["PUT"])
+    def api_library_update() -> Any:
+        thread = Thread(target=library.update, name="APILibUpdateThread")
+        thread.start()
+        thread.join(1.0)
+        return jsonify({
+            "status": "ok",
+            "update_status": "updating" if thread.is_alive() else "completed"
+        })
 
     @flask.route(api_prefix + "/schedule", methods=["POST"])
     def api_schedule() -> Any:
@@ -146,16 +157,6 @@ def create(
                 "status": "error",
                 "message": "No extension for this command."
             })
-
-    @flask.route(api_prefix + "/library/update", methods=["PUT"])
-    def api_library_update() -> Any:
-        thread = Thread(target=library.update, name="APILibUpdateThread")
-        thread.start()
-        thread.join(1.0)
-        return jsonify({
-            "status": "ok",
-            "update_status": "updating" if thread.is_alive() else "completed"
-        })
 
     def start() -> None:
         serve(

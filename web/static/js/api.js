@@ -53,15 +53,15 @@ export async function get_extensions() {
 
 /**
  * Searches the song library.
- * @param {string} filter
+ * @param {string} query
  * @returns {Promise<string[]>} a list of songs
  */
-export async function search(filter) {
-    filter = filter.trim();
-    if(filter == "") {
+export async function search(query) {
+    query = query.trim();
+    if(query == "") {
         return Promise.resolve([]);
     }
-    let obj = await api_request("/search/" + encodeURIComponent(filter), "GET");
+    let obj = await api_request("/library/search?query=" + encodeURIComponent(query), "GET");
     return obj.results;
 }
 
