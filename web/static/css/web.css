@@ -216,7 +216,18 @@ body {
 }
 
 #song-list .song .buttons {
-    margin-top: 4px;
+    display: none;
+    margin-top: 6px;
+    margin-bottom: 2px;
+    user-select: none;
+}
+
+#song-list .song.expanded .buttons {
+    display: block;
+}
+
+#song-list .song:not(.expanded):hover {
+    box-shadow: inset 0px -2px 3px 0px rgba(16,16,16,0.05);
 }
 
 #song-list .song .buttons a::before {

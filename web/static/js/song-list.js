@@ -55,6 +55,12 @@ function clear() {
 function song_to_div(song) {
     let div = document.createElement("div");
     div.classList.add("song");
+    div.addEventListener("click", e => {
+        e.stopPropagation();
+        if(window.getSelection().type !== "Range") {
+            div.classList.toggle("expanded");
+        }
+    });
 
     let main = document.createElement("div");
     main.classList.add("main");
@@ -84,6 +90,7 @@ function song_to_div(song) {
         add_button.classList.add("add");
         add_button.addEventListener("click", async (e) => {
             e.preventDefault();
+            e.stopPropagation();
             await api.schedule(song);
             alert(filename + " added to queue.");
         });
@@ -96,6 +103,7 @@ function song_to_div(song) {
         download_button.textContent = "download";
         download_button.href = api.get_download_url(song);
         download_button.download = download_button.href;
+        download_button.addEventListener("click", e => e.stopPropagation());
         buttons.appendChild(download_button);
     }
 
