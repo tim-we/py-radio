@@ -215,23 +215,45 @@ body {
     margin-right: 2px;
 }
 
-#song-list .song button.add {
-    box-sizing: border-box;
-    width: 25px;
-    height: 25px;
-    border-radius: 50%;
-    border: none;
-    background-color: #2790ec;
-    background-image: url("../img/add.svg");
+#song-list .song .buttons {
+    display: none;
+    margin-top: 6px;
+    margin-bottom: 2px;
+    user-select: none;
+}
+
+#song-list .song.expanded .buttons {
+    display: block;
+}
+
+#song-list .song:not(.expanded):hover {
+    box-shadow: inset 0px -2px 3px 0px rgba(16,16,16,0.05);
+}
+
+#song-list .song .buttons a::before {
+    content: " ";
+    position: relative;
+    display: inline-block;
+    text-decoration: none;
+    cursor: default;
+    width: 20px;
+    height: 20px;
     background-repeat: no-repeat;
     background-size: contain;
     background-position: center;
-    cursor: pointer;
-    margin-left: 8px;
-    vertical-align: top;
-    opacity: 0.6;
+    margin-right: 2px;
+    vertical-align: middle;
 }
 
-#song-list .song:hover button.add {
-    opacity: 1;
+#song-list .song .buttons a:not(:last-of-type) {
+    margin-right: 10px;
+}
+
+#song-list .song a.add::before {
+    top: -1;
+    background-image: url("../img/add.svg");
+}
+
+#song-list .song a.download::before {
+    background-image: url("../img/download.svg");
 }

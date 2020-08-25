@@ -15,6 +15,7 @@ class ClipLibrary:
         self.night = ClipPool(os.path.join(folder, "night"))
         self.other = ClipPool(folder)
         self.folder = folder
+        self.abs_path = os.path.abspath(folder)
         print(" ->", self.music.size() + self.night.size(), "songs")
         print(" ->", self.hosts.size(), "host clips")
         Thread(target=self._update_thread, name="LibUpdateThread", daemon=True).start()
@@ -44,6 +45,7 @@ class ClipLibrary:
         n = 0
         if short_path:
             n = len(self.folder)
+            # also remove /
             if not self.folder[-1] == os.sep:
                 n += 1
         clean_results = map(lambda x: x[n:], raw_results)
