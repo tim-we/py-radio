@@ -53,6 +53,10 @@ function clear() {
  * @returns {HTMLDivElement}
  */
 function song_to_div(song) {
+    let compontents = song.split("/");
+    let folder = compontents.slice(0, compontents.length-1).join("/");
+    let filename = compontents[compontents.length - 1];
+
     let div = document.createElement("div");
     div.classList.add("song");
     div.addEventListener("click", e => {
@@ -66,8 +70,6 @@ function song_to_div(song) {
     main.classList.add("main");
     div.appendChild(main);
     {
-        let compontents = song.split("/");
-        let folder = compontents.slice(0, compontents.length-1).join("/");
         if(folder.length > 0) {
             let folder_span = document.createElement("span");
             folder_span.innerText = folder + "/";
@@ -75,7 +77,6 @@ function song_to_div(song) {
             main.appendChild(folder_span);
         }
         
-        let filename = compontents[compontents.length - 1];
         let file_span = document.createElement("span");
         file_span.innerText = filename
         file_span.classList.add("file");
