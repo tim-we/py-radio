@@ -215,14 +215,12 @@ body {
     margin-right: 2px;
 }
 
-#song-list .song button.add {
+#song-list .song button {
     box-sizing: border-box;
     width: 25px;
     height: 25px;
     border-radius: 50%;
     border: none;
-    background-color: #2790ec;
-    background-image: url("../img/add.svg");
     background-repeat: no-repeat;
     background-size: contain;
     background-position: center;
@@ -232,6 +230,16 @@ body {
     opacity: 0.6;
 }
 
-#song-list .song:hover button.add {
+#song-list .song:hover button {
     opacity: 1;
+}
+
+#song-list .song button.add {
+    background-color: #2790ec;
+    background-image: url("../img/add.svg");
+}
+
+#song-list .song button.download {
+    background-color: yellow;
+    background-image: url("../img/download.svg");
 }

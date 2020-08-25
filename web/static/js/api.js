@@ -111,3 +111,11 @@ export function button(btn, path, method = "GET", onsuccess) {
         }
     });
 }
+
+/**
+ * @param {string} clip
+ * @returns {string}
+ */
+export function get_download_url(clip) {
+    return API_PATH + "/library/download?file=" + encodeURIComponent(clip)
+}

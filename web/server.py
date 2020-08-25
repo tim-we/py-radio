@@ -2,13 +2,13 @@ import radio.player
 import radio.library
 from radio.audio import AudioClip, Pause
 from radio.extensions import Extension
-from flask import Flask, jsonify, send_file, request
-from typing import Any
+from flask import Flask, jsonify, send_file, request, abort
 from threading import Thread, active_count
 from waitress import serve
 import ifcfg
 import os
 import sys
+from typing import Any, Optional
 
 api_prefix = "/api/v1.0"
 MAX_SEARCH_RESULTS = 50
@@ -64,6 +64,19 @@ def create(
                 "num_all_results": len(results)
             })
 
+    @flask.route(api_prefix + "/library/download", methods=["GET"])
+    def api_download() -> Any:
+        file: Optional[str] = request.args.get("file", type=str)
+        if file is None:
+            abort(400, description="Required argument 'file' is missing.")
+        results = library.search_clips(file, short_path=True)
+        if len(results) == 1 and results[0] == file:
+            path = os.path.join(library.abs_path, results[0])
+            return send_file(path)
+        else:
+            abort(404, description="Resource not found.")
+            print("what is happening here")
+
     @flask.route(api_prefix + "/library/update", methods=["PUT"])
     def api_library_update() -> Any:
         thread = Thread(target=library.update, name="APILibUpdateThread")
@@ -76,7 +89,7 @@ def create(
 
     @flask.route(api_prefix + "/schedule", methods=["POST"])
     def api_schedule() -> Any:
-        file = request.values.get("file")
+        file: Optional[str] = request.values.get("file", type=str)
         if file is None:
             return jsonify({
                 "status": "error",

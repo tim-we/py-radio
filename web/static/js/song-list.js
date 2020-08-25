@@ -71,6 +71,7 @@ function song_to_div(song) {
     file_span.classList.add("file");
     div.appendChild(file_span);
 
+    // buttons
     let add_button = document.createElement("button");
     add_button.classList.add("add");
     add_button.addEventListener("click", async () => {
@@ -79,6 +80,14 @@ function song_to_div(song) {
     });
     add_button.title = "add to queue";
     div.appendChild(add_button);
+
+    let download = document.createElement("button");
+    download.classList.add("download");
+    download.title = "download";
+    download.addEventListener("click", () => {
+        window.open(api.get_download_url(song), "_blank");
+    });
+    div.appendChild(download);
 
     return div;
 }
