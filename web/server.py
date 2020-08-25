@@ -75,7 +75,6 @@ def create(
             return send_file(path)
         else:
             abort(404, description="Resource not found.")
-            print("what is happening here")
 
     @flask.route(api_prefix + "/library/update", methods=["PUT"])
     def api_library_update() -> Any:
