@@ -72,7 +72,11 @@ def create(
         results = library.search_clips(file, short_path=True)
         if len(results) == 1 and results[0] == file:
             path = os.path.join(library.abs_path, results[0])
-            return send_file(path)
+            return send_file(
+                path,
+                as_attachment=True,
+                attachment_filename=os.path.basename(path)
+            )
         else:
             abort(404, description="Resource not found.")
 
