@@ -62,6 +62,12 @@ function song_to_div(song) {
     div.addEventListener("click", e => {
         e.stopPropagation();
         if(window.getSelection().type !== "Range") {
+            if(!div.classList.contains("expanded")) {
+                let other = list_output.querySelector("div.song.expanded");
+                if(other) {
+                    other.classList.remove("expanded");
+                }
+            }
             div.classList.toggle("expanded");
         }
     });
