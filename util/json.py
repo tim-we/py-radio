@@ -26,7 +26,7 @@ class JSONFile:
         if not json_string == "":
             self._data = json.loads(json_string)
 
-    def get(self, path: str, default: T, fail: bool = False) -> T:
+    def get(self, path: str, default: T, fail: bool = False, expected_type: Optional[Any] = None) -> T:
         """ Example:
         cfg.get("telegram.enabled")
 
@@ -41,4 +41,7 @@ class JSONFile:
                     raise ValueError("{} does not contain '{}'".format(self.file or "JSON", path))
                 else:
                     return default
+        if expected_type is not None:
+            if not isinstance(obj, expected_type):
+                raise TypeError("{} does not match the expected type {}.".format(path, expected_type))
         return obj

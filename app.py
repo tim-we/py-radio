@@ -10,7 +10,7 @@ cfg = JSONFile("config.json")
 
 # start radio
 print("Radio starting...")
-library = ClipLibrary(cfg.get("library", "test_library"))
+library = ClipLibrary(cfg.get("library", "test_library", expected_type=str))
 if library.music.size() == 0:
     sys.exit("Library does not contain any music.")
 player = Player(library)
@@ -23,13 +23,17 @@ add_extensions(player, ["tagesschau"])
 await_internet()
 
 # start bots & web server
-if cfg.get("web.enabled", False):
+if cfg.get("web.enabled", False, expected_type=bool):
     web.server.create(
         player=player,
         library=library,
         config=cfg
     )
 
-if cfg.get("telegram.enabled", False):
-    telegram = Telegram(cfg.get("telegram.token", "", fail=True), player, library)
+if cfg.get("telegram.enabled", False, expected_type=bool):
+    telegram = Telegram(
+        cfg.get("telegram.token", "", fail=True, expected_type=str),
+        player,
+        library
+    )
     telegram.start()

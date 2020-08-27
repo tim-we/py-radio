@@ -26,6 +26,15 @@ def create(
         static_folder="static"
     )
 
+    # -------------- CONFIG ---------------
+    host: str = config.get("web.host", "inet", expected_type=str)
+    dif = ifcfg.default_interface()
+    if "." not in host and host in dif:
+        host = dif[host]
+    port: int = config.get("web.port", 6969, expected_type=int)
+    if port < 1024:
+        print("Warning: Ports below 1024 require root access.")
+
     # -------------- WEBSITE --------------
     @flask.route("/", methods=["GET"])
     def web_main() -> Any:
@@ -174,13 +183,6 @@ def create(
             })
 
     def start() -> None:
-        host: str = config.get("web.host", "inet")
-        dif = ifcfg.default_interface()
-        if "." not in host and host in dif:
-            host = dif[host]
-        port: int = config.get("web.port", 6969)
-        if port < 1024:
-            print("Warning: Ports below 1024 require root access.")
         serve(
             flask,
             host=host,
