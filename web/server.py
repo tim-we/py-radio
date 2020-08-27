@@ -1,3 +1,4 @@
+from util import JSONFile
 import radio.player
 import radio.library
 from radio.audio import AudioClip, Pause
@@ -17,15 +18,13 @@ MAX_SEARCH_RESULTS = 50
 def create(
     player: 'radio.player.Player',
     library: 'radio.library.ClipLibrary',
-    port: int = 80
+    config: JSONFile
 ) -> None:
     flask = Flask(
         __name__.split('.')[0],
         static_url_path="/static",
         static_folder="static"
     )
-
-    host = ifcfg.default_interface()["inet"]
 
     # -------------- WEBSITE --------------
     @flask.route("/", methods=["GET"])
@@ -175,6 +174,13 @@ def create(
             })
 
     def start() -> None:
+        host: str = config.get("web.host", "inet")
+        dif = ifcfg.default_interface()
+        if "." not in host and host in dif:
+            host = dif[host]
+        port: int = config.get("web.port", 6969)
+        if port < 1024:
+            print("Warning: Ports below 1024 require root access.")
         serve(
             flask,
             host=host,

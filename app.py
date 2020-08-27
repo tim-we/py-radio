@@ -1,8 +1,8 @@
+from util import await_internet, JSONFile
 from radio import Player, ClipLibrary
 from radio.extensions import add_extensions
 from bots.tg import Telegram
 import web.server
-from util import await_internet, JSONFile
 import sys
 
 # user configuration
@@ -27,7 +27,7 @@ if cfg.get("web.enabled", False):
     web.server.create(
         player=player,
         library=library,
-        port=cfg.get("web.port", 6969)
+        config=cfg
     )
 
 if cfg.get("telegram.enabled", False):
