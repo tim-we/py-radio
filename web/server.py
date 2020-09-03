@@ -35,6 +35,19 @@ def create(
     if port < 1024:
         print("Warning: Ports below 1024 require root access.")
 
+    # -------------- ERRORS ---------------
+    @flask.errorhandler(404)
+    def resource_not_found(e):
+        if request.path.startswith("/api/"):
+            response = jsonify({
+                "status": "error",
+                "message": str(e),
+                "version": "1.0"
+            })
+        else:
+            response = send_file("static/error.html")
+        return response, 404
+
     # -------------- WEBSITE --------------
     @flask.route("/", methods=["GET"])
     def web_main() -> Any:
