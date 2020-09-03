@@ -37,7 +37,7 @@ def create(
 
     # -------------- ERRORS ---------------
     @flask.errorhandler(404)
-    def resource_not_found(e):
+    def resource_not_found(e: Any) -> Any:
         if request.path.startswith("/api/"):
             response = jsonify({
                 "status": "error",
