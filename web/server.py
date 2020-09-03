@@ -53,6 +53,10 @@ def create(
     def web_main() -> Any:
         return send_file("static/web.html")
 
+    @flask.route("/favicon.ico", methods=["GET"])
+    def web_favicon() -> Any:
+        return send_file("static/img/favicon.ico")
+
     # ---------------- API ----------------
     @flask.route(api_prefix + "/now", methods=["GET"])
     def api_now() -> Any:
