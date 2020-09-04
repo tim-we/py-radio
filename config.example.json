@@ -1,5 +1,6 @@
 {
     "library": "test_library",
+    "extensions": ["tagesschau"],
     "telegram": {
         "enabled": false,
         "token": "",

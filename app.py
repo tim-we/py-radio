@@ -17,7 +17,7 @@ player = Player(library)
 player.start()
 
 # extensions
-add_extensions(player, ["tagesschau"])
+add_extensions(player, cfg.get("extensions", [], expected_type=list))
 
 # the following modules require internet
 await_internet()
