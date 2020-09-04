@@ -109,7 +109,8 @@ function song_to_div(song) {
         download_button.classList.add("download");
         download_button.textContent = "download";
         download_button.href = api.get_download_url(song);
-        download_button.download = download_button.href;
+        download_button.download = filename;
+        download_button.title = "download " + filename;
         download_button.addEventListener("click", e => e.stopPropagation());
         buttons.appendChild(download_button);
     }
