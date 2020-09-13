@@ -13,7 +13,7 @@ print("Radio starting...")
 library = ClipLibrary(cfg.get("library", "test_library", expected_type=str))
 if library.music.size() == 0:
     sys.exit("Library does not contain any music.")
-player = Player(library)
+player = Player(library, cfg)
 player.start()
 
 # extensions

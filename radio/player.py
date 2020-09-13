@@ -1,23 +1,28 @@
 from threading import Thread
 import time
 from queue import Queue, LifoQueue
-from radio.audio import Clip
+from radio.audio import Clip, AudioClip
 from radio.scheduler import Scheduler
 from radio.extensions import Extension, run_extension
 import radio.library
+from util import JSONFile
 from typing import Optional, List, Dict
 
 HISTORY_LEN: int = 7
 
 
 class Player:
-    def __init__(self, library: 'radio.library.ClipLibrary'):
+    def __init__(self, library: 'radio.library.ClipLibrary', config: JSONFile):
         self._queue: Queue = LifoQueue()
         self._scheduler = Scheduler(library)
         self._history: List[Clip] = []
         self._current: Optional[Clip] = None
         self._thread: Optional[Thread] = None
         self.extensions: Dict[str, Extension] = {}
+        normalize = config.get("normalize", True, expected_type=bool)
+        AudioClip.normalize()
+        if normalize:
+            print("Audio normalization enabled.")
 
     def get_history(self, num: int = 0, format_title: str = '{}', format_skip: str = ' (skipped)') -> List[str]:
         """Returns a list of strings, each representing a clip."""

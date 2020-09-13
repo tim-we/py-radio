@@ -39,6 +39,7 @@ class Clip(ABC):
 
 
 class AudioClip(Clip):
+    _normalize: bool = False
     _loading_queue: Queue = Queue()
     loading_thread: Optional[Thread] = None
 
@@ -86,16 +87,20 @@ class AudioClip(Clip):
     @classmethod
     def _load(cls) -> None:
         while True:
-            # (pre)load next audio clip
+            # (pre-)load next audio clip
             clip = cls._loading_queue.get()
-            data, sr = ffmpeg_load_audio(clip.file)
-            clip.duration = len(data) / sr  # type: ignore
+            data, sr = ffmpeg_load_audio(clip.file, normalize=cls._normalize)
+            clip.duration = len(data) / sr
             # store data
             clip._data = data
             clip._sr = sr
             # send signal that the clip is loaded as .start() might be waiting
             clip.loaded.set()
             time.sleep(0.1)
+
+    @classmethod
+    def normalize(cls, enable: bool = True) -> None:
+        cls._normalize = enable
 
 
 class Pause(Clip):
