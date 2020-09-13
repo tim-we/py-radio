@@ -4,6 +4,8 @@
 ![tests](https://github.com/tim-we/py-radio/workflows/tests/badge.svg)
 [![GitHub license](https://img.shields.io/github/license/tim-we/py-radio)](https://github.com/tim-we/py-radio/blob/master/LICENSE)
 
+![logo](https://raw.githubusercontent.com/tim-we/py-radio/master/web/static/img/icon.svg)
+
 ## Install
 
 We recommend [using a virtual environment](https://packaging.python.org/guides/installing-using-pip-and-virtual-environments/#creating-a-virtual-environment) for this.
