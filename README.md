@@ -1,7 +1,7 @@
 # py-radio
 
-![static analysis](https://github.com/tim-we/py-radio/workflows/static%20analysis/badge.svg)
-![tests](https://github.com/tim-we/py-radio/workflows/tests/badge.svg)
+[![static analysis](https://github.com/tim-we/py-radio/workflows/static%20analysis/badge.svg)](https://github.com/tim-we/py-radio/actions?query=workflow%3A%22static+analysis%22)
+[![tests](https://github.com/tim-we/py-radio/workflows/tests/badge.svg)](https://github.com/tim-we/py-radio/actions?query=workflow%3Atests)
 [![GitHub license](https://img.shields.io/github/license/tim-we/py-radio)](https://github.com/tim-we/py-radio/blob/master/LICENSE)
 
 ![logo](https://raw.githubusercontent.com/tim-we/py-radio/master/web/static/img/icon.svg)
