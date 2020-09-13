@@ -18,7 +18,6 @@ class Scheduler:
 
     def next(self) -> Clip:
         if not self._queue.empty():
-            self._force_song = True
             return self._queue.get()
         else:
             if self._force_song:
@@ -57,7 +56,7 @@ class Scheduler:
         if self.library.hosts.empty():
             return False
 
-        t: float = time.time() - self._last_host_time
+        t: float = (time.time() - self._last_host_time)/60
         r: float = 4.0 + random.uniform(0.0, 6.0)
         return t > r
 
