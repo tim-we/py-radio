@@ -7,7 +7,7 @@ source .venv/bin/activate
 
 while [ "$exitcode" == 0 ]
 do
-  python3 app.py
+  python3 -O app.py
   exitcode="$?"
   if [ "$exitcode" == 69 ]
   then
