@@ -8,7 +8,8 @@
 
 A music player written in Python designed to run on a Raspberry Pi computer.
 Simulates a radio with support for DJ announcements and hourly news (Tagesschau in 100s).
-Optional web interface, API and Telegram bot to control the radio and add & schedule songs.
+Optional [web interface](https://github.com/tim-we/py-radio/wiki/Web-interface),
+[API](https://github.com/tim-we/py-radio/wiki/API-v1.0) and a Telegram bot to control the radio and add & schedule songs.
 
 ## Install
 
