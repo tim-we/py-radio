@@ -28,9 +28,10 @@ jobs:
       run: pip install mypy
     
     - name: Run mypy check
-      run: |
-        mypy .
-        mypy tests
+      run: mypy .
+
+    - name: Type-check tests
+      run: mypy tests
   
   syntax-check:
     runs-on: ubuntu-latest
