@@ -19,17 +19,27 @@ body {
 }
 
 #header {
-    display: grid;
-    place-items: center;
+    display: flex;
+    justify-content: center;
     height: 80px;
 
     background-image: linear-gradient(#1e415e 10%,#2b5b84 90%);
     color: white;
 }
 
-#header h1 {
+#header img {
+    margin-right: 14px;
+    max-height: 70px;
+    position: relative;
+    top: 5px;
+}
+
+#header span {
     margin: 0px;
     padding: 0px;
+    font-size: 32px;
+    font-weight: bold;
+    line-height: 80px;
 }
 
 #content > div {
@@ -111,7 +121,6 @@ body {
     white-space: nowrap;
     cursor: pointer;
     border-radius: 5px;
-    vertical-align: top;
 }
 
 #controls button:not(:first-of-type) {
