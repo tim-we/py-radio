@@ -8,6 +8,7 @@ from radio.scheduler import Scheduler
 from radio.audio import Clip, AudioClip
 import shutil
 from unittest.mock import patch
+from typing import Any
 
 
 def create_wav_file(file: str) -> None:
@@ -31,10 +32,10 @@ def audio_clip_file_contains(clip: Clip, name: str) -> bool:
 
 
 class TestClip(Clip):
-    def __init__(self):
+    def __init__(self) -> None:
         super().__init__("TestClip")
 
-    def copy(self):
+    def copy(self) -> Clip:
         return TestClip()
 
 
@@ -97,7 +98,7 @@ class TestLibraryAndScheduler(TestCase):
 
     @patch("random.uniform", return_value=1.0)
     @patch("time.time", return_value=0.0)
-    def test_scheduler_host_frequency(self, patched_time, patched_random) -> None:
+    def test_scheduler_host_frequency(self, patched_time: Any, patched_random: Any) -> None:
         library = ClipLibrary(self.test_lib_folder, log=False, auto_update=False)
         scheduler = Scheduler(library, preload=False)
         for i in range(10):
