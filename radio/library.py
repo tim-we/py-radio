@@ -6,21 +6,24 @@ from threading import Thread
 from itertools import chain
 from more_itertools import peekable
 import re
-from typing import List, Iterable, Union
+from typing import List, Iterable
 
 
 class ClipLibrary:
-    def __init__(self, folder: str):
-        print("Building clip library...")
+    def __init__(self, folder: str, log: bool = True, auto_update: bool = True):
+        if log:
+            print("Building clip library...")
         self.hosts = ClipPool(os.path.join(folder, "hosts"))
         self.music = ClipPool(os.path.join(folder, "music"))
         self.night = ClipPool(os.path.join(folder, "night"))
         self.other = ClipPool(folder)
         self.folder = folder
         self.abs_path = os.path.abspath(folder)
-        print(" ->", self.music.size() + self.night.size(), "songs")
-        print(" ->", self.hosts.size(), "host clips")
-        Thread(target=self._update_thread, name="LibUpdateThread", daemon=True).start()
+        if log:
+            print(" ->", self.music.size() + self.night.size(), "songs")
+            print(" ->", self.hosts.size(), "host clips")
+        if auto_update:
+            Thread(target=self._update_thread, name="LibUpdateThread", daemon=True).start()
 
     def update(self) -> None:
         print("Updating library...")
