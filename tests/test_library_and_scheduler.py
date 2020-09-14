@@ -22,6 +22,7 @@ def create_pool(folder: str, prefix: str, n: int = 10) -> None:
         file = os.path.join(folder, prefix + str(i+1) + ".wav")
         create_wav_file(file)
 
+
 def audio_clip_file_contains(clip: Clip, name: str) -> bool:
     assert isinstance(clip, AudioClip), "Clip is not an AudioClip!"
     audio_clip: AudioClip = clip  # type: ignore
