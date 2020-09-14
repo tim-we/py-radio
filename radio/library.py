@@ -3,8 +3,10 @@ import os
 import random
 import time
 from threading import Thread
-from typing import List, Iterable
 from itertools import chain
+from more_itertools import peekable
+import re
+from typing import List, Iterable, Union
 
 
 class ClipLibrary:
@@ -34,13 +36,34 @@ class ClipLibrary:
             # update library
             self.update()
 
-    def search_clips(self, search: str, short_path: bool = False) -> List[str]:
-        # get all paths matching the search term
-        raw_results = chain(
+    def _filter(self, search: str) -> Iterable[str]:
+        return chain(
             self.music.filter(search),
             self.night.filter(search),
-            self.other.filter(search)
+            self.other.filter(search),
+            self.night.filter(search)
         )
+
+    def search_clips(self, search: str, short_path: bool = False) -> List[str]:
+        # get all paths matching the search term
+        raw_results = peekable(self._filter(search))
+        # do extended search if there are no matches
+        if raw_results.peek(None) is None:
+            delimiters = [".", " ", "-", "_"]
+            search_parts = list(filter(
+                lambda s: len(s.strip()) > 0,
+                re.split("|".join(map(re.escape, delimiters)), search)
+            ))
+            if len(search_parts) > 0 and (search is not search_parts[0]):
+                parts = iter(search_parts)
+                results = self._filter(next(parts))
+                for search_part in parts:
+                    results = filter(
+                        lambda x: search_part in x.lower(),
+                        results
+                    )
+                raw_results = peekable(results)
+
         # return only relative paths if short_path is true
         n = 0
         if short_path:
