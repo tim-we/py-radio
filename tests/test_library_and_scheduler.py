@@ -7,6 +7,7 @@ from radio import ClipLibrary
 from radio.scheduler import Scheduler
 from radio.audio import Clip, AudioClip
 import shutil
+from unittest.mock import patch
 
 
 def create_wav_file(file: str) -> None:
@@ -27,6 +28,14 @@ def audio_clip_file_contains(clip: Clip, name: str) -> bool:
     assert isinstance(clip, AudioClip), "Clip is not an AudioClip!"
     audio_clip: AudioClip = clip  # type: ignore
     return name in audio_clip.file
+
+
+class TestClip(Clip):
+    def __init__(self):
+        super().__init__("TestClip")
+
+    def copy(self):
+        return TestClip()
 
 
 class TestLibraryAndScheduler(TestCase):
@@ -77,3 +86,22 @@ class TestLibraryAndScheduler(TestCase):
         # second clip should be from "music"
         snd_clip = scheduler.next()
         self.assertTrue(audio_clip_file_contains(snd_clip, "song_"))
+
+    def test_scheduler_manual(self) -> None:
+        library = ClipLibrary(self.test_lib_folder, log=False, auto_update=False)
+        scheduler = Scheduler(library, preload=False)
+        test_clip = TestClip()
+        scheduler.schedule(test_clip)
+        next_clip = scheduler.next()
+        self.assertIsInstance(next_clip, TestClip)
+
+    @patch("random.uniform", return_value=1.0)
+    @patch("time.time", return_value=0.0)
+    def test_scheduler_host_frequency(self, patched_time, patched_random) -> None:
+        library = ClipLibrary(self.test_lib_folder, log=False, auto_update=False)
+        scheduler = Scheduler(library, preload=False)
+        for i in range(10):
+            patched_time.return_value += 10*60  # 10min
+            self.assertTrue(audio_clip_file_contains(scheduler.next(), "dj_"))
+            patched_time.return_value += 42
+            self.assertFalse(audio_clip_file_contains(scheduler.next(), "dj_"))
