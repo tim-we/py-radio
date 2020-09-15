@@ -4,12 +4,13 @@ import random
 from threading import Thread
 from radio.audio import Clip, AudioClip
 import radio.library
+from typing import Deque
 
 
 class Scheduler:
     def __init__(self, library: 'radio.library.ClipLibrary', preload: bool = True):
         self.library = library
-        self._queue: deque[Clip] = deque()
+        self._queue: Deque[Clip] = deque()
         self._force_song = False
         self._other_clips: int = 0
         self._last_host_time: float = 0.0
@@ -66,7 +67,7 @@ class Scheduler:
     def _prepare_next(self) -> None:
         while True:
             time.sleep(0.5)
-            if self._queue.empty():
+            if len(self._queue) == 0:
                 clip = self.next()
                 self._queue.append(clip)
                 if isinstance(clip, AudioClip):
