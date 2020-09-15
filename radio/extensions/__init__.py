@@ -28,7 +28,7 @@ def run_extension(scheduler: 'rs.Scheduler', extension: Extension) -> Thread:
             clip = extension.get_clip()
             if clip is not None:
                 # schedule the clip so it will be played next
-                scheduler.schedule(clip)
+                scheduler.schedule(clip, prepend=True)
                 # sleep a little while to avoid immediate rescheduling
                 sleep(extension.poll_delay)
 

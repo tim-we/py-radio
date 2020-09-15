@@ -1,4 +1,4 @@
-from queue import Queue
+from collections import deque
 import time
 import random
 from threading import Thread
@@ -9,7 +9,7 @@ import radio.library
 class Scheduler:
     def __init__(self, library: 'radio.library.ClipLibrary', preload: bool = True):
         self.library = library
-        self._queue: Queue = Queue()
+        self._queue: deque[Clip] = deque()
         self._force_song = False
         self._other_clips: int = 0
         self._last_host_time: float = 0.0
@@ -17,8 +17,8 @@ class Scheduler:
             Thread(target=self._prepare_next, daemon=True).start()
 
     def next(self) -> Clip:
-        if not self._queue.empty():
-            return self._queue.get()
+        if len(self._queue) > 0:
+            return self._queue.popleft()
         else:
             if self._force_song:
                 self._other_clips = 0
@@ -46,11 +46,14 @@ class Scheduler:
         self._other_clips = 0
         self._last_host_time = 0.0
         if hard:
-            self._queue = Queue()
+            self._queue.clear()
 
-    def schedule(self, clip: Clip) -> None:
+    def schedule(self, clip: Clip, prepend: bool = False) -> None:
         assert clip is not None
-        self._queue.put(clip)
+        if prepend:
+            self._queue.appendleft(clip)
+        else:
+            self._queue.append(clip)
 
     def _host_time(self) -> bool:
         if self.library.hosts.empty():
@@ -65,6 +68,6 @@ class Scheduler:
             time.sleep(0.5)
             if self._queue.empty():
                 clip = self.next()
-                self._queue.put(clip)
+                self._queue.append(clip)
                 if isinstance(clip, AudioClip):
                     clip.loaded.wait()

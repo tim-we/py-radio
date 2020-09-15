@@ -96,6 +96,19 @@ class TestLibraryAndScheduler(TestCase):
         next_clip = scheduler.next()
         self.assertIsInstance(next_clip, TestClip)
 
+    def test_scheduler_prepend(self) -> None:
+        library = ClipLibrary(self.test_lib_folder, log=False, auto_update=False)
+        scheduler = Scheduler(library, preload=False)
+        clip1 = TestClip()
+        clip2 = TestClip()
+        clip3 = TestClip()
+        scheduler.schedule(clip1)
+        scheduler.schedule(clip2)
+        scheduler.schedule(clip3, prepend=True)
+        self.assertEqual(scheduler.next(), clip3)
+        self.assertEqual(scheduler.next(), clip1)
+        self.assertEqual(scheduler.next(), clip2)
+
     @patch("random.uniform", return_value=1.0)
     @patch("time.time", return_value=0.0)
     def test_scheduler_host_frequency(self, patched_time: Any, patched_random: Any) -> None:
