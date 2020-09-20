@@ -1,6 +1,7 @@
 from util import await_internet, JSONFile
 from radio import Player, ClipLibrary
 from radio.extensions import add_extensions
+from hardware.button import RadioButton
 from bots.tg import Telegram
 import web.server
 import sys
@@ -18,6 +19,14 @@ player.start()
 
 # extensions
 add_extensions(player, cfg.get("extensions", [], expected_type=list))
+
+# hardware
+if cfg.get("hardware.button.enabled", False, expected_type=bool):
+    RadioButton(
+        player=player,
+        pause=cfg.get("hardware.button.pause", False, expected_type=bool),
+        skip=cfg.get("hardware.button.skip", True, expected_type=bool)
+    )
 
 # the following modules require internet
 await_internet()
