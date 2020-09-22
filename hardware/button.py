@@ -1,12 +1,14 @@
 import radio.player
 from radio.audio import Pause
 from gpiozero import Button
-from threading import Thread, Event
-from time import time, sleep
+from threading import Event
+from time import time as now
 
 
 class RadioButton:
     def _pressed(self):
+        if self._time_limit > now():
+            return
         self._event = Event()
         self._event.wait(timeout=1)
         if self._button.is_active and self._pause:
@@ -17,6 +19,7 @@ class RadioButton:
                 self._player.skip()
 
     def _released(self):
+        self._time_limit = now() + 0.5
         self._event.set()
 
     def __init__(
@@ -30,5 +33,6 @@ class RadioButton:
         self._pause = pause
         self._skip = skip
         self._event = Event()
+        self._time_limit = 0
         self._button.when_activated = self._pressed
         self._button.when_deactivated = self._released
