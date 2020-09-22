@@ -266,3 +266,22 @@ body {
 #song-list .song a.download::before {
     background-image: url("../img/download.svg");
 }
+
+@media (prefers-color-scheme: dark) {
+    body {
+        --bg-color: rgb(32,32,32);
+    }
+
+    #about {
+        color: rgb(180, 180, 180)
+    }
+
+    #history {
+        background-color: rgb(48, 48, 48);
+        color: rgb(180, 180, 180);
+    }
+
+    #history .title {
+        color: rgb(220, 220, 220);
+    }
+}
