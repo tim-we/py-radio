@@ -27,11 +27,11 @@ def create(
     )
 
     # -------------- CONFIG ---------------
-    host: str = config.get("web.host", "inet", expected_type=str)
+    host: str = config.get_or_default("web.host", "inet", str)
     dif = ifcfg.default_interface()
     if "." not in host and host in dif:
         host = dif[host]
-    port: int = config.get("web.port", 6969, expected_type=int)
+    port: int = config.get_or_default("web.port", 6969, int)
     if port < 1024:
         print("Warning: Ports below 1024 require root access.")
 

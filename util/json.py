@@ -1,8 +1,6 @@
 import json
 import os
-from typing import TypeVar, Any, Optional
-
-T = TypeVar('T')
+from typing import Any, Optional
 
 
 class JSONFile:
@@ -26,22 +24,35 @@ class JSONFile:
         if not json_string == "":
             self._data = json.loads(json_string)
 
-    def get(self, path: str, default: T, fail: bool = False, expected_type: Optional[Any] = None) -> T:
+    def get_or_default(self, path: str, default: Any, value_type: type) -> Any:
         """ Example:
-        cfg.get("telegram.enabled")
+        cfg.get_or_default("telegram.enabled")
 
         Returns default value if key does not exist
+        """
+        assert isinstance(default, value_type)
+        obj: Any = self._data
+        for key in path.split("."):
+            if key in obj:
+                obj = obj[key]
+            else:
+                return default
+        if not isinstance(obj, value_type):
+            raise TypeError("{} does not match the expected type {}.".format(path, value_type))
+        return obj
+
+    def get_or_fail(self, path: str, value_type: type) -> Any:
+        """ Example:
+        cfg.get_or_default("telegram.enabled")
+
+        Raises an exception if key does not exist
         """
         obj: Any = self._data
         for key in path.split("."):
             if key in obj:
                 obj = obj[key]
             else:
-                if fail:
-                    raise ValueError("{} does not contain '{}'".format(self.file or "JSON", path))
-                else:
-                    return default
-        if expected_type is not None:
-            if not isinstance(obj, expected_type):
-                raise TypeError("{} does not match the expected type {}.".format(path, expected_type))
+                raise ValueError("{} does not contain '{}'".format(self.file or "JSON", path))
+        if not isinstance(obj, value_type):
+            raise TypeError("{} does not match the expected type {}.".format(path, value_type))
         return obj
