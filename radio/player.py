@@ -20,7 +20,7 @@ class Player:
         self._thread: Optional[Thread] = None
         self.extensions: Dict[str, Extension] = {}
         normalize = config.get("normalize", True, expected_type=bool)
-        AudioClip.normalize()
+        AudioClip.normalize(normalize)
         if normalize:
             print("Audio normalization enabled.")
 
