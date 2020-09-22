@@ -1,6 +1,6 @@
 from threading import Thread
 import time
-from queue import Queue, LifoQueue
+from queue import Queue
 from radio.audio import Clip, AudioClip
 from radio.scheduler import Scheduler
 from radio.extensions import Extension, run_extension
@@ -13,7 +13,7 @@ HISTORY_LEN: int = 7
 
 class Player:
     def __init__(self, library: 'radio.library.ClipLibrary', config: JSONFile):
-        self._queue: Queue = LifoQueue()
+        self._queue: Queue = Queue()
         self._scheduler = Scheduler(library)
         self._history: List[Clip] = []
         self._current: Optional[Clip] = None
@@ -58,9 +58,9 @@ class Player:
         else:
             print("Nothing to repeat.")
 
-    def start(self) -> None:
+    def start(self, daemon: bool = False) -> None:
         if self._thread is None:
-            self._thread = Thread(target=self._play, name="PlayerThread", daemon=False)
+            self._thread = Thread(target=self._play, name="PlayerThread", daemon=daemon)
             self._thread.start()
 
     def _add_to_history(self, clip: Clip) -> None:
