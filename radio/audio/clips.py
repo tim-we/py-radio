@@ -76,11 +76,13 @@ class AudioClip(Clip):
         self._completed.set()
 
     def stop(self) -> None:
-        self.aborted = True
-        self.loaded.wait()
-        sd.stop()
+        if self.loaded.is_set():
+            sd.stop()
+        else:
+            self.aborted = True
+            self.loaded.wait()
         super().stop()
-        time.sleep(0.1)
+        time.sleep(0.05)
 
     def copy(self) -> Clip:
         return AudioClip(self.file, self.name)
