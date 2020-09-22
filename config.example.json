@@ -1,21 +1,12 @@
 {
     "library": "test_library",
     "extensions": ["tagesschau"],
-    "hardware": {
-        "button": {
-            "enabled": false,
-            "pause": false,
-            "skip": true
-        }
-    },
     "telegram": {
-        "enabled": false,
-        "token": "",
-        "users": []
+        "enabled": false
     },
     "web": {
         "enabled": true,
-        "port": 5000
+        "port": 6969
     },
     "normalize": true
 }
