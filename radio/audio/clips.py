@@ -60,13 +60,12 @@ class AudioClip(Clip):
 
     def start(self) -> None:
         super().start()
-        if self.aborted:
-            return
 
         # wait until MP3 file is loaded
-        if not self.loaded.is_set():
-            self.loaded.wait()
+        self.loaded.wait()
         assert self._data is not None
+        if self.aborted:
+            return
 
         # play & free memory
         sd.play(self._data, self._sr)
@@ -77,6 +76,8 @@ class AudioClip(Clip):
         self._completed.set()
 
     def stop(self) -> None:
+        self.aborted = True
+        self.loaded.wait()
         sd.stop()
         super().stop()
         time.sleep(0.1)
