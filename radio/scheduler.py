@@ -21,10 +21,14 @@ class Scheduler:
         if len(self._queue) > 0:
             return self._queue.popleft()
         else:
+            now = time.localtime()
+            is_day = (now.tm_hour > 7 and now.tm_hour < 23) or (self.library.night.size() == 0)
+            music_pool = self.library.music if (is_day or random.uniform(0, 1) < 0.33) else self.library.night
+
             if self._force_song:
                 self._other_clips = 0
                 self._force_song = False
-                return AudioClip(self.library.music.next())
+                return AudioClip(music_pool.next())
 
             if self._host_time():
                 self._last_host_time = time.time()
@@ -37,7 +41,7 @@ class Scheduler:
             force_music = self.library.other.size() == 0 or self._other_clips > 2
 
             if force_music or random.uniform(0, 1) < 0.7:
-                return AudioClip(self.library.music.next())
+                return AudioClip(music_pool.next())
             else:
                 self._other_clips += 1
                 return AudioClip(self.library.other.next())
