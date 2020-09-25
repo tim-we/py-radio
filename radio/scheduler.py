@@ -4,6 +4,7 @@ import random
 from threading import Thread
 from radio.audio import Clip, AudioClip
 import radio.library
+from math import sqrt
 from typing import Deque
 
 
@@ -23,7 +24,10 @@ class Scheduler:
         else:
             now = time.localtime()
             is_day = (now.tm_hour > 7 and now.tm_hour < 23) or (self.library.night.size() == 0)
-            music_pool = self.library.music if (is_day or random.uniform(0, 1) < 0.33) else self.library.night
+            night_ratio = 0.75 * sqrt((min(25, self.library.night.size())/25))
+            assert night_ratio >= 0.0 and night_ratio <= 1.0
+            day_ratio = 1.0 - night_ratio
+            music_pool = self.library.music if (is_day or random.uniform(0, 1) < day_ratio) else self.library.night
 
             if self._force_song:
                 self._other_clips = 0
