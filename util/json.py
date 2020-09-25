@@ -21,7 +21,9 @@ class JSONFile:
         else:
             json_string = file_content
 
-        if not json_string == "":
+        if json_string == "":
+            raise ValueError("Empty JSON string")
+        else:
             self._data = json.loads(json_string)
 
     def get_or_default(self, path: str, default: Any, value_type: type) -> Any:
