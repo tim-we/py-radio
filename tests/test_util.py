@@ -1,6 +1,7 @@
 from unittest import TestCase
 from util import JSONFile
 from json.decoder import JSONDecodeError
+from util import HourRange
 
 
 class TestJSONFile(TestCase):
@@ -35,3 +36,27 @@ class TestJSONFile(TestCase):
     def test_invalid_json(self) -> None:
         with self.assertRaises(JSONDecodeError):
             JSONFile(file_content='{value: 42}')
+
+
+class TestTimeUtils(TestCase):
+    def test_no_wrap_around(self) -> None:
+        hr = HourRange(2, 15)
+        self.assertTrue(hr.is_in(2))
+        self.assertTrue(hr.is_in(4))
+        self.assertTrue(hr.is_in(15))
+        self.assertFalse(hr.is_in(1))
+        self.assertFalse(hr.is_in(16))
+
+    def test_wrap_around(self) -> None:
+        hr = HourRange(23, 6)
+        self.assertTrue(hr.is_in(23))
+        self.assertTrue(hr.is_in(0))
+        self.assertTrue(hr.is_in(2))
+        self.assertTrue(hr.is_in(6))
+        self.assertFalse(hr.is_in(22))
+        self.assertFalse(hr.is_in(7))
+
+    def test_error(self) -> None:
+        hr = HourRange(0, 23)
+        with self.assertRaises(ValueError):
+            hr.is_in(24)
