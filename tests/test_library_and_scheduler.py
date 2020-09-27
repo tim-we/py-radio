@@ -51,7 +51,7 @@ class TestLibraryAndScheduler(TestCase):
         # generate library for tests
         create_pool(os.path.join(folder, "music"), "song_", 42)
         create_pool(os.path.join(folder, "hosts"), "dj_")
-        create_pool(os.path.join(folder, "night"), "song_", 5)
+        create_pool(os.path.join(folder, "night"), "song_night_", 5)
         create_pool(folder, "other_clip_", 10)
 
     @classmethod
@@ -76,6 +76,22 @@ class TestLibraryAndScheduler(TestCase):
         os.remove(filepath)
         library.update()
         self.assertEqual(library.music.size(), n)
+
+    def test_library_search(self) -> None:
+        library = ClipLibrary(self.test_lib_folder, log=False, auto_update=False)
+        res1 = library.search_clips("song_")
+        self.assertGreater(len(res1), 0)
+        res2 = library.search_clips("song_night")
+        self.assertGreater(len(res2), 0)
+        self.assertGreater(len(res1), len(res2))
+        res3 = library.search_clips("dj_")
+        self.assertEqual(len(res3), 0)
+
+    def test_library_search_no_duplicates(self) -> None:
+        library = ClipLibrary(self.test_lib_folder, log=False, auto_update=False)
+        results = library.search_clips("song_")
+        unique_results = set(results)
+        self.assertEqual(len(results), len(unique_results))
 
     def test_scheduler_start(self) -> None:
         library = ClipLibrary(self.test_lib_folder, log=False, auto_update=False)

@@ -43,8 +43,7 @@ class ClipLibrary:
         return chain(
             self.music.filter(search),
             self.night.filter(search),
-            self.other.filter(search),
-            self.night.filter(search)
+            self.other.filter(search)
         )
 
     def search_clips(self, search: str, short_path: bool = False) -> List[str]:
