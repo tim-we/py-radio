@@ -66,9 +66,10 @@ def create(
             "current": "-" if now is None else now.__str__(),
             "history": player.get_history(),
             "library": {
-                "music": library.music.size() + library.night.size(),
+                "music": library.music.size(),
                 "hosts": library.hosts.size(),
-                "other": library.other.size()
+                "other": library.other.size(),
+                "night": library.night.size()
             }
         })
 
