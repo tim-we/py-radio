@@ -1,19 +1,19 @@
 from threading import Thread
 import time
-from queue import Queue
-from radio.audio import Clip, AudioClip
+from collections import deque
+from radio.audio import Clip, AudioClip, Pause
 from radio.scheduler import Scheduler
 from radio.extensions import Extension, run_extension
 import radio.library
 from util import JSONFile
-from typing import Optional, List, Dict
+from typing import Optional, List, Dict, Deque
 
 HISTORY_LEN: int = 7
 
 
 class Player:
     def __init__(self, library: 'radio.library.ClipLibrary', config: JSONFile):
-        self._queue: Queue = Queue()
+        self._queue: Deque[Clip] = deque()
         self._scheduler = Scheduler(library)
         self._history: List[Clip] = []
         self._current: Optional[Clip] = None
@@ -40,7 +40,7 @@ class Player:
 
     def schedule(self, clip: Clip) -> None:
         clip.user_req = True
-        self._queue.put(clip)
+        self._queue.append(clip)
 
     def skip(self) -> None:
         clip = self._current
@@ -50,6 +50,12 @@ class Player:
             print(msg)
         else:
             print("Skip failed: Nothing to skip.")
+
+    def pause(self) -> None:
+        clip = self._current
+        if not isinstance(self._current, Pause):
+            self._queue.appendleft(Pause())
+        self.skip()
 
     def repeat(self) -> None:
         clip = self._current
@@ -73,15 +79,15 @@ class Player:
         while True:
             time.sleep(0.1)
 
-            if self._queue.empty():
+            if len(self._queue) == 0:
                 next_clip = self._scheduler.next()
                 if isinstance(next_clip, Clip):
-                    self._queue.put(next_clip)
+                    self._queue.append(next_clip)
                 else:
                     time.sleep(1.0)
                     continue
 
-            clip = self._queue.get()
+            clip = self._queue.popleft()
             print("Playing", clip)
             self._current = clip
             try:

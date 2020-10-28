@@ -9,7 +9,9 @@ from typing import Deque
 
 
 class Scheduler:
-    def __init__(self, library: 'radio.library.ClipLibrary', preload: bool = True):
+    preload_default = True
+
+    def __init__(self, library: 'radio.library.ClipLibrary', preload: bool = Scheduler.preload_default):
         self.library = library
         self._queue: Deque[Clip] = deque()
         self._force_song = False
