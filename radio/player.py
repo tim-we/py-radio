@@ -52,7 +52,6 @@ class Player:
             print("Skip failed: Nothing to skip.")
 
     def pause(self) -> None:
-        clip = self._current
         if not isinstance(self._current, Pause):
             self._queue.appendleft(Pause())
         self.skip()
