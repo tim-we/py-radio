@@ -21,6 +21,7 @@ class TestClip(Clip):
     def copy(self) -> Clip:
         return TestClip()
 
+
 class TestPlayer(TestCase):
     test_lib_folder: str = ""
 
