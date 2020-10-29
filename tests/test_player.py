@@ -1,14 +1,25 @@
 from unittest import TestCase
-from tests.library_test_utils import create_pool, TestClip
+from tests.library_test_utils import create_pool
 import shutil
 import os
 from radio import ClipLibrary, Player
 from util import JSONFile
 import tempfile
 import time
-from radio.audio import Pause
-from radio.scheduler import Scheduler
+from radio.audio import Clip, Pause
 
+
+class TestClip(Clip):
+    def __init__(self) -> None:
+        super().__init__("TestClip")
+
+    def start(self) -> None:
+        super().start()
+        self._completed.wait(1)
+        self._completed.set()
+
+    def copy(self) -> Clip:
+        return TestClip()
 
 class TestPlayer(TestCase):
     test_lib_folder: str = ""
@@ -33,15 +44,14 @@ class TestPlayer(TestCase):
     def test_pause_after_queue(self) -> None:
         library = ClipLibrary(self.test_lib_folder, log=False, auto_update=False)
         json = JSONFile(file_content='{"normalize":true}')
-        Scheduler.preload_default = False
         player = Player(library, json)
-        player.schedule(TestClip())
-        player.schedule(TestClip())
-        player.schedule(TestClip())
         player.start(True)
+        player.schedule(TestClip())
+        player.schedule(TestClip())
+        player.schedule(TestClip())
         player.pause()
-        time.sleep(0.25)
+        time.sleep(0.2)
         self.assertIsInstance(player.now(), Pause)
         player.skip()
-        time.sleep(0.25)
+        time.sleep(0.5)
         self.assertIsInstance(player.now(), TestClip)

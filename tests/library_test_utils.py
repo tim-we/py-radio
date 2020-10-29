@@ -22,11 +22,3 @@ def audio_clip_file_contains(clip: Clip, name: str) -> bool:
     assert isinstance(clip, AudioClip), "Clip is not an AudioClip!"
     audio_clip: AudioClip = clip  # type: ignore
     return name in audio_clip.file
-
-
-class TestClip(Clip):
-    def __init__(self) -> None:
-        super().__init__("TestClip")
-
-    def copy(self) -> Clip:
-        return TestClip()

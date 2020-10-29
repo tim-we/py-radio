@@ -3,12 +3,19 @@ import tempfile
 import os
 from radio import ClipLibrary
 from radio.scheduler import Scheduler
-from radio.audio import Clip, AudioClip
+from radio.audio import Clip
 import shutil
 from unittest.mock import patch
 from typing import Any
-from tests.library_test_utils import create_wav_file, create_pool, audio_clip_file_contains, TestClip
+from tests.library_test_utils import create_wav_file, create_pool, audio_clip_file_contains
 
+
+class TestClip(Clip):
+    def __init__(self) -> None:
+        super().__init__("TestClip")
+
+    def copy(self) -> Clip:
+        return TestClip()
 
 class TestLibraryAndScheduler(TestCase):
     test_lib_folder: str = ""
