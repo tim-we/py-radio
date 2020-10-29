@@ -149,9 +149,7 @@ def create(
 
     @flask.route(api_prefix + "/pause", methods=["POST", "PUT"])
     def api_pause() -> Any:
-        if not isinstance(player.now(), Pause):
-            player.schedule(Pause())
-        player.skip()
+        player.pause()
         return jsonify({"status": "ok"})
 
     @flask.route(api_prefix + "/sysinfo", methods=["GET"])
