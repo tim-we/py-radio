@@ -1,7 +1,7 @@
 from util import JSONFile
 import radio.player
 import radio.library
-from radio.audio import AudioClip, Pause
+from radio.audio import AudioClip
 from radio.extensions import Extension
 from flask import Flask, jsonify, send_file, request, abort
 from threading import Thread, active_count
