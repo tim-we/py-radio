@@ -1,0 +1,13 @@
+{
+    "compilerOptions": {
+      "outDir": "./static",
+      "target": "es6",
+      "module": "es6",
+      "sourceMap": true,
+      "jsx": "react",
+      "strict": true,
+      "noImplicitAny": true,
+      "strictPropertyInitialization": false,
+      "allowSyntheticDefaultImports": true
+    }
+  }
