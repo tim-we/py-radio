@@ -20,21 +20,10 @@ export default class App extends Component<AppProps, AppState> {
         super(props);
         this.state = { extensions: [] };
 
-        props.radio
-            .extensions()
-            .then((extensions) => this.setState({ extensions }));
-    }
+        const radio = props.radio;
 
-    public componentDidMount() {
-        document.addEventListener("visibilitychange", () => {
-            if (document.visibilityState === "visible") {
-                this.update();
-            }
-        });
-
-        this.update();
-
-        window.setInterval(this.update.bind(this), 3141);
+        radio.on("update", (now) => this.setState({ now }));
+        radio.extensions().then((extensions) => this.setState({ extensions }));
     }
 
     public render() {
@@ -45,9 +34,12 @@ export default class App extends Component<AppProps, AppState> {
             <React.Fragment>
                 <Header />
                 <div id="content">
-                    <NowPlaying clip={this.state.now?.current} />
-                    <Controls radio={props.radio} extensions={state.extensions}/>
-                    <History />
+                    <NowPlaying clip={state.now?.current} />
+                    <Controls
+                        radio={props.radio}
+                        extensions={state.extensions}
+                    />
+                    <History data={state.now ? state.now.history : []} />
                     <div id="stats"></div>
                 </div>
                 <About />

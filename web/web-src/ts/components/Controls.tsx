@@ -16,7 +16,12 @@ export default class Controls extends Component<ControlsProps> {
                     <Button
                         key={ext.command}
                         tooltip={ext.name}
-                        onClick={() => radio.api_request(`/extensions/${ext.command}/schedule`, "PUT")}
+                        onClick={() =>
+                            radio.api_request(
+                                `/extensions/${ext.command}/schedule`,
+                                "PUT"
+                            )
+                        }
                     >
                         {ext.command}
                     </Button>
@@ -24,17 +29,17 @@ export default class Controls extends Component<ControlsProps> {
                 <Button
                     id="pause"
                     tooltip="toggle pause"
-                    onClick={() => radio.api_request("/pause", "POST")}
+                    onClick={() => radio.pause()}
                 />
                 <Button
                     id="repeat"
                     tooltip="repeat current clip"
-                    onClick={() => radio.api_request("/repeat", "PUT")}
+                    onClick={() => radio.repeat()}
                 />
                 <Button
                     id="skip"
                     tooltip="skip current clip"
-                    onClick={() => radio.api_request("/skip", "PUT")}
+                    onClick={() => radio.skip()}
                 />
                 <Button
                     id="song-list-button"

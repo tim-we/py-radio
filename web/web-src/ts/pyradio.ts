@@ -1,14 +1,33 @@
-const DEFAULT_HOST:string = window.location.host;
+const DEFAULT_HOST: string = window.location.host;
 
 export default class PyRadio {
     public readonly host: string;
+    private eventListeners: Map<RadioEvent, UpdateEventListener[]> = new Map();
+    private timeouts: Map<RadioEvent, number> = new Map();
 
     public constructor(host: string = DEFAULT_HOST) {
         this.host = host;
+
+        // setup auto updates
+        this.scheduleUpdate();
+        document.addEventListener("visibilitychange", () => {
+            if (document.visibilityState === "visible") {
+                this.scheduleUpdate();
+            }
+        });
     }
 
     public get base_url(): string {
         return `http://${this.host}/api/v1.0`;
+    }
+
+    public on(type: RadioEvent, listener: UpdateEventListener): void {
+        if (!this.eventListeners.has(type)) {
+            this.eventListeners.set(type, []);
+        }
+
+        const listeners = this.eventListeners.get(type) || [];
+        listeners.push(listener);
     }
 
     public async api_request<T extends APIBaseResponse>(
@@ -39,6 +58,21 @@ export default class PyRadio {
         return this.api_request("/now");
     }
 
+    public async skip(): Promise<void> {
+        await this.api_request("/skip", "PUT");
+        this.scheduleUpdate();
+    }
+
+    public async pause(): Promise<void> {
+        await this.api_request("/pause", "POST");
+        this.scheduleUpdate();
+    }
+
+    public async repeat(): Promise<void> {
+        await this.api_request("/repeat", "PUT");
+        this.scheduleUpdate();
+    }
+
     public async extensions() {
         const obj = await this.api_request<APIExtensionResponse>("/extensions");
         return obj.extensions;
@@ -65,11 +99,49 @@ export default class PyRadio {
     }
 
     public download_url(clip: string): string {
-        return `${this.base_url}/library/download?file=${encodeURIComponent(clip)}`;
+        return `${this.base_url}/library/download?file=${encodeURIComponent(
+            clip
+        )}`;
+    }
+
+    private async update(): Promise<void> {
+        // clear timeout in case this was called manually
+        const timeout = this.timeouts.get("update");
+        if (timeout) {
+            window.clearTimeout(timeout);
+        }
+
+        // update
+        let data = await this.now();
+
+        // notify listeners
+        if (this.eventListeners.has("update")) {
+            this.eventListeners
+                .get("update")!
+                .forEach((listener) => listener(data));
+        }
+
+        // schedule next update
+        window.setTimeout(
+            this.update.bind(this),
+            document.visibilityState === "visible" ? 3141 : 6666
+        );
+    }
+
+    private scheduleUpdate(): void {
+        // clear last timeout
+        const timeout = this.timeouts.get("update");
+        if (timeout) {
+            window.clearTimeout(timeout);
+        }
+
+        window.setTimeout(this.update.bind(this), 10);
     }
 }
 
 type HTTPMethod = "GET" | "POST" | "PUT" | "DELETE";
+
+type RadioEvent = "update";
 
 type RequestInitData = RequestInit & { follow: "error" };
 
@@ -81,12 +153,7 @@ type APIBaseResponse = {
 
 type APIResponse = APIBaseResponse | APIErrorResponse;
 
-type APINowResponse = {
-    status: "ok";
-    current: string;
-    history: string[];
-    library: { hosts: number; music: number; other: number };
-};
+type APINowResponse = APIBaseResponse & NowData;
 
 type APIExtensionResponse = {
     status: "ok";
@@ -97,3 +164,11 @@ type APISearchResponse = {
     status: "ok";
     results: string[];
 };
+
+type NowData = {
+    current: string;
+    history: string[];
+    library: { hosts: number; music: number; other: number };
+};
+
+type UpdateEventListener = (data: NowData) => any;
