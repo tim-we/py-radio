@@ -1,2 +1,3 @@
 node_modules
-static/web-react.js
+static/*.js
+static/*.LICENSE.txt

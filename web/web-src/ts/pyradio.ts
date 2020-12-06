@@ -70,7 +70,6 @@ export default class PyRadio {
 
     public async repeat(): Promise<void> {
         await this.api_request("/repeat", "PUT");
-        this.scheduleUpdate();
     }
 
     public async extensions() {

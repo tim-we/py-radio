@@ -25,7 +25,7 @@ module.exports = {
         }),
     ],
     output: {
-        filename: "web-react.js",
-        path: path.resolve(__dirname, "static", "js"),
+        filename: "web.js",
+        path: path.resolve(__dirname, "static"),
     },
 };

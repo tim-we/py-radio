@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import PyRadio from "../pyradio";
+import * as SongListModal from "./SongListModal";
 
 type ControlsProps = {
     radio: PyRadio;
@@ -45,7 +46,10 @@ export default class Controls extends Component<ControlsProps> {
                     id="song-list-button"
                     tooltip="song list"
                     icon="list"
-                    onClick={() => Promise.resolve("TODO")}
+                    onClick={() => {
+                        SongListModal.show(radio);
+                        return Promise.resolve();
+                    }}
                 />
             </div>
         );
@@ -95,6 +99,7 @@ class Button extends Component<ButtonProps, ButtonState> {
             <button
                 id={props.id}
                 title={tooltip}
+                type="button"
                 onClick={this.clickHandler}
                 className={classes.join(" ")}
             >
