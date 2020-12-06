@@ -13,6 +13,8 @@ do
   then
     git pull
     pip install -r requirements.txt
+    npm --prefix ./web ci
+    npm --prefix ./web run build:production
     exitcode=0
   fi
   sleep 1

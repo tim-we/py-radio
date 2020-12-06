@@ -4,8 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>py-radio web interface</title>
-    <link rel="stylesheet" href="static/css/web.css">
-    <script type="module" src="static/js/web.js"></script>
+    <link rel="stylesheet" href="/static/css/web.css">
 
     <link rel="apple-touch-icon" sizes="180x180" href="/static/img/apple-touch-icon.png">
     <link rel="icon" type="image/png" sizes="32x32" href="/static/img/favicon-32x32.png">
@@ -19,47 +18,8 @@
     <meta name="theme-color" content="#1e415e">
 </head>
 <body>
-    <div id="header">
-        <img alt="logo" src="static/img/icon.svg" />
-        <span>py-radio</span>
-    </div>
-    <div id="content">
-        <div id="now">
-            <div class="title">Now playing:</div>
-            <div id="current-clip">-</div>
-        </div>
-        <div id="controls">
-            <button id="pause" title="toggle pause">
-                <img src="static/img/pause.svg"/>
-            </button>
-            <button id="repeat" title="repeat current clip">
-                <img src="static/img/repeat.svg" />
-            </button>
-            <button id="skip" title="skip the current clip">
-                <img src="static/img/skip.svg" />
-            </button>
-            <button id="song-list-button" title="song list">
-                <img src="static/img/list.svg" />
-            </button>
-        </div>
-        <div id="history">
-            <div class="title">Recent history:</div>
-            <div id="history-clips"></div>
-        </div>
-        <div id="stats"></div>
-    </div>
-    <div id="about">
-        The code for this project is
-        <a href="https://github.com/tim-we/py-radio">available on GitHub</a>.
-    </div>
-    <div id="song-list-container">
-        <div id="song-list-modal">
-            <div id="song-list-controls">
-                <input id="song-filter" type="text" placeholder="filter" />
-                <button id="song-list-close"></button>
-            </div>
-            <div id="song-list"></div>
-        </div>
-    </div>
+    <div id="root"></div>
+    <div id="modal-portal"></div>
+    <script src="/static/web.js"></script>
 </body>
 </html>
