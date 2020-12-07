@@ -36,7 +36,7 @@ def create(
         print("Warning: Ports below 1024 require root access.")
 
     @flask.after_request
-    def add_header(response):
+    def add_header(response: Any) -> Any:
         response.cache_control.max_age = 120
         response.cache_control.no_cache = True
         return response
