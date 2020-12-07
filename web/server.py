@@ -35,6 +35,12 @@ def create(
     if port < 1024:
         print("Warning: Ports below 1024 require root access.")
 
+    @flask.after_request
+    def add_header(response):
+        response.cache_control.max_age = 120
+        response.cache_control.no_cache = True
+        return response
+
     # -------------- ERRORS ---------------
     @flask.errorhandler(404)
     def resource_not_found(e: Any) -> Any:
