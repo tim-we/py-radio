@@ -166,8 +166,15 @@ type APISearchResponse = {
 
 type NowData = {
     current: string;
-    history: string[];
+    history: HistoryEntry[];
     library: { hosts: number; music: number; other: number };
 };
+
+export type HistoryEntry = {
+    start: string;
+        title: string;
+        skipped: boolean;
+        userScheduled: boolean;
+}
 
 type UpdateEventListener = (data: NowData) => any;

@@ -69,8 +69,8 @@ def create(
         now = player.now()
         return jsonify({
             "status": "ok",
-            "current": "-" if now is None else now.__str__(),
-            "history": player.get_history(),
+            "current": "-" if now is None else str(now),
+            "history": list(map(lambda c: c.__dict__, player.get_history())),
             "library": {
                 "music": library.music.size(),
                 "hosts": library.hosts.size(),

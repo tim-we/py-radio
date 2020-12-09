@@ -24,16 +24,10 @@ class Player:
         if normalize:
             print("Audio normalization enabled.")
 
-    def get_history(self, num: int = 0, format_title: str = '{}', format_skip: str = ' (skipped)') -> List[str]:
+    def get_history(self, num: int = 0) -> List["HistoryEntry"]:
         """Returns a list of strings, each representing a clip."""
         cl = self._history if num > 0 else self._history[-min(num, HISTORY_LEN):]
-        sl = []
-        for clip in cl:
-            t = clip.started
-            assert t is not None
-            sl.append('{:02d}:{:02d} '.format(t.tm_hour, t.tm_min) + format_title.format(clip.__str__())
-                      + format_skip*clip.aborted)
-        return sl
+        return list(map(lambda clip: HistoryEntry(clip), cl))
 
     def now(self) -> Optional[Clip]:
         return self._current
@@ -102,3 +96,16 @@ class Player:
         if extension.command is not None:
             self.extensions[extension.command] = extension
         print("Extension: '{}' is now active.".format(extension.name))
+
+
+class HistoryEntry:
+    def __init__(self, clip: Clip):
+        t = clip.started
+        assert t is not None
+        self.start = "{:02d}:{:02d}".format(t.tm_hour, t.tm_min)
+        self.title = str(clip)
+        self.skipped = clip.aborted
+        self.userScheduled = clip.user_req
+
+    def __str__(self) -> str:
+        return self.start + " `{}`".format(self.title) + " (skipped)"*self.skipped

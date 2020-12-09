@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import PyRadio from "../pyradio";
+import PyRadio, { HistoryEntry } from "../pyradio";
 import About from "./About";
 import Controls from "./Controls";
 import Header from "./Header";
@@ -11,7 +11,7 @@ type AppProps = {
 };
 
 type AppState = {
-    now?: { current: string; history: string[] };
+    now?: { current: string; history: HistoryEntry[] };
     extensions: { name: string; command: string }[];
 };
 
