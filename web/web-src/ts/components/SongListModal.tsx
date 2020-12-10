@@ -23,6 +23,7 @@ class SongListModal extends Component<SLMProps, SLMState> {
     public constructor(props: SLMProps) {
         super(props);
         this.state = { clips: [] };
+        this.escapeHandler = this.escapeHandler.bind(this);
     }
 
     public render() {
@@ -83,7 +84,7 @@ class SongListModal extends Component<SLMProps, SLMState> {
         input.addEventListener("input", async () => {
             let filter = input.value.trim();
             if (filter === "") {
-                this.clear();
+                this.clearResults();
             } else if (filter.length > 1) {
                 this.setState({
                     clips: await radio.search(filter),
@@ -92,14 +93,27 @@ class SongListModal extends Component<SLMProps, SLMState> {
         });
 
         input.focus();
+
+        document.addEventListener("keydown", this.escapeHandler);
     }
 
-    private clear() {
+    public componentWillUnmount() {
+        document.removeEventListener("keydown", this.escapeHandler);
+    }
+
+    private clearResults() {
         this.setState({ clips: [] });
     }
 
     private close() {
         ReactDOM.unmountComponentAtNode(portal);
+    }
+
+    private escapeHandler(e: KeyboardEvent) {
+        if (e.key === "Escape") {
+            e.preventDefault();
+            this.close();
+        }
     }
 }
 
