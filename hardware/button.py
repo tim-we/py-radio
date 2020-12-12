@@ -2,7 +2,7 @@ import radio.player
 from radio.audio import Pause
 from gpiozero import Button
 from threading import Thread, Event
-from time import time as now
+from time import time as now, sleep
 
 
 class RadioButton:
@@ -43,9 +43,10 @@ class RadioButton:
                     # the button was released within 1 second of being pressed
                     # assume the user just wanted to skip the current song
                     # thus skip the current pause
+                    # however the scheduled Pause might not have started:
+                    while button._player.now() is not None:
+                        sleep(0.05)
                     button._player.skip()
-
-            button._event.clear()
 
         # reset event (unset)
         self._event.clear()
