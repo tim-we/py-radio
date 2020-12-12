@@ -40,8 +40,8 @@ class RadioButton:
 
         if self._pause and self._skip:
             # wait for button to be released or 1 second to pass
-            self._event.wait(timeout=1)
-            if not self._button.is_active:
+            # wait() returns True iff the event is set, not when it timed out
+            if self._event.wait(timeout=1):
                 # the button was released within 1 second of being pressed
                 # assume the user just wanted to skip the current song
                 # thus skip the current pause
