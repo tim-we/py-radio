@@ -47,6 +47,8 @@ class RadioButton:
                 # thus skip the current pause
                 self._player.skip()
 
+        self._event.clear()
+
     def _released(self) -> None:
         self._time_limit = now() + 0.5
         self._event.set()
