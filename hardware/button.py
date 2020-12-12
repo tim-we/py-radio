@@ -29,7 +29,7 @@ class RadioButton:
             return
 
         # reset event (unset)
-        self._event = Event()
+        self._event.clear()
 
         if self._pause:
             # schedule pause to avoid further playback
