@@ -28,6 +28,9 @@ class RadioButton:
         if self._time_limit > now():
             return
 
+        # reset event (unset)
+        self._event.clear()
+
         def button_press_handler(button: RadioButton) -> None:
             if button._pause:
                 # schedule pause to avoid further playback
@@ -44,12 +47,10 @@ class RadioButton:
                     # assume the user just wanted to skip the current song
                     # thus skip the current pause
                     # however the scheduled Pause might not have started:
-                    while button._player.now() is not None:
+                    while button._player.now() is None:
                         sleep(0.05)
                     button._player.skip()
 
-        # reset event (unset)
-        self._event.clear()
         # avoid thread blocking (otherwise _released() would wait for _pressed() to finish)
         Thread(target=button_press_handler, args=(self, )).start()
 

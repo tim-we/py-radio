@@ -87,6 +87,7 @@ class Player:
                 clip.start()
             except Exception as e:
                 print("Unexpected error", e)
+                self._current = None
                 time.sleep(1.0)
             self._add_to_history(clip)
             self._current = None
