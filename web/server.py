@@ -81,7 +81,13 @@ def create(
 
     @flask.route(api_prefix + "/library/search", methods=["GET"])
     def api_search() -> Any:
-        query: str = request.args.get("query", "", type=str).strip()[0:42]
+        qarg: Optional[str] = request.args.get("query", "", type=str)
+        if qarg is None:
+            return jsonify({
+                "status": "error",
+                "message": "Invalid query."
+            })
+        query: str = qarg.strip()[0:42]
         if len(query) == 0:
             return jsonify({
                 "status": "error",
