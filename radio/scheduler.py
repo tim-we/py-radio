@@ -23,7 +23,7 @@ class Scheduler:
             return self._queue.popleft()
         else:
             now = time.localtime()
-            is_day = (now.tm_hour > 7 and now.tm_hour < 23) or (self.library.night.size() == 0)
+            is_day = (now.tm_hour > 5 and now.tm_hour < 23) or (self.library.night.size() == 0)
             night_ratio = 0.75 * sqrt((min(25, self.library.night.size())/25))
             assert night_ratio >= 0.0 and night_ratio <= 1.0
             day_ratio = 1.0 - night_ratio
