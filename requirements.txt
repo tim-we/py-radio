@@ -1,3 +1,4 @@
+wheel==0.38.4
 ffmpeg-python==0.2.0
 flake8==3.8.3
 Flask==1.1.2
@@ -10,5 +11,4 @@ sounddevice==0.4.0
 waitress==2.1.2
 more-itertools==8.5.0
 soundfile==0.10.3.post1
-gpiozero==1.5.1
-rpi.gpio==0.7.0
+gpiozero==1.6.2
