@@ -7,8 +7,9 @@ from radio.extensions.extension import Extension
 from radio.audio import Clip, AudioClip
 from typing import Optional
 
-PODCAST_URL = "http://www.tagesschau.de" \
-              "/export/podcast/hi/tagesschau-in-100-sekunden/"
+PODCAST_URL = "https://www.tagesschau.de" \
+              "/multimedia/sendung/tagesschau_in_100_sekunden" \
+              "/podcast-ts100-audio-100~podcast.xml"
 
 
 class Tagesschau100s(Extension):
@@ -25,7 +26,7 @@ class Tagesschau100s(Extension):
             # get MP3 URL of latest episode
             res1 = requests.get(PODCAST_URL)
             tree = ET.fromstring(res1.content)
-            elem = tree.find(".//item/enclosure[@type='audio/mp3']")
+            elem = tree.find(".//item/enclosure[@type='audio/mpeg']")
             url = elem.get("url")  # type: ignore
 
             # download MP3 file
