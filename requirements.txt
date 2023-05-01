@@ -1,7 +1,7 @@
 wheel==0.38.4
 ffmpeg-python==0.2.0
 flake8==3.8.3
-Flask==1.1.2
+Flask==2.3.2
 ifcfg==0.21
 numpy==1.19.1
 python-telegram-bot==12.8
